@@ -3,6 +3,7 @@ package com.gaseomwohae.gaseomwohae.controller;
 import java.util.List;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -46,6 +47,11 @@ public class TravelController {
 	@PutMapping("/{travel-id}")
 	public void updateTravel(@PathVariable("travel-id") Long travelId, @RequestBody UpdateTravelRequestDto updateTravelRequestDto) {
 		travelService.updateTravel(travelId, updateTravelRequestDto);
+	}
+
+	@DeleteMapping("/{travel-id}")
+	public void deleteTravel(@AuthenticationPrincipal Long userId, @PathVariable("travel-id") Long travelId) {
+		travelService.deleteTravel(userId, travelId);
 	}
 
 }

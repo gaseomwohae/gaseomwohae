@@ -54,7 +54,10 @@ public class TravelServiceImpl implements TravelService {
 
 		List<Travel> travelList = new ArrayList<>();
 		participantList.forEach((participant -> {
-			travelList.add(travelRepository.findById(participant.getTravelId()));
+			Travel travel = travelRepository.findById(participant.getTravelId());
+			if (travel != null) {
+				travelList.add(travel);
+			}
 		}));
 		return travelList;
 	}
@@ -62,6 +65,7 @@ public class TravelServiceImpl implements TravelService {
 	@Override
 	@Transactional
 	public void createTravel(Long userId, CreateTravelRequestDto createTravelRequestDto) {
+
 
 		Travel newTravel = Travel.builder()
 			.name(createTravelRequestDto.getName())
@@ -71,6 +75,8 @@ public class TravelServiceImpl implements TravelService {
 			.endDate(createTravelRequestDto.getEndDate())
 			.build();
 
+		travelRepository.insert(newTravel);
+		
 		Participant participant = Participant.builder()
 			.travelId(newTravel.getId())
 			.userId(userId).
@@ -102,5 +108,20 @@ public class TravelServiceImpl implements TravelService {
 			.build();
 
 		travelRepository.update(updateTravel);
+	}
+
+	@Override
+	public void deleteTravel(Long userId, Long travelId) {
+		Travel travel = travelRepository.findById(travelId);
+		if (travel == null) {
+			throw new BadRequestException(ErrorCode.RESOURCE_NOT_FOUND);
+		}
+
+		List<Participant> participantList = participantRepository.findByTravelId(travelId);
+		if (!participantList.stream().anyMatch(participant -> participant.getUserId().equals(userId))) {
+			throw new BadRequestException(ErrorCode.ACCESS_DENIED);
+		}
+
+		travelRepository.delete(travelId);
 	}
 }
