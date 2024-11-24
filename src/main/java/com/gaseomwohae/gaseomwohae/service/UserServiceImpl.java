@@ -4,6 +4,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.gaseomwohae.gaseomwohae.dto.User;
+import com.gaseomwohae.gaseomwohae.dto.user.GetUserInfoResponseDto;
 import com.gaseomwohae.gaseomwohae.dto.user.SignUpRequestDto;
 import com.gaseomwohae.gaseomwohae.repository.UserRepository;
 import com.gaseomwohae.gaseomwohae.util.response.ErrorCode;
@@ -32,6 +33,20 @@ public class UserServiceImpl implements UserService {
 			.profileImage(signUpRequestDto.getProfileImage())
 			.build()
 		);
+	}
+
+	@Override
+	public GetUserInfoResponseDto getUserInfo(Long userId) {
+		User user = userRepository.findById(userId);
+
+		if (user == null) {
+			throw new BadRequestException(ErrorCode.RESOURCE_NOT_FOUND);
+		}
+
+		return new GetUserInfoResponseDto().builder()
+			.name(user.getName())
+			.email(user.getEmail())
+			.profileImage(user.getProfileImage()).build();
 	}
 
 }
