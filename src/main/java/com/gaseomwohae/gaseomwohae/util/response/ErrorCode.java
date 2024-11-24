@@ -14,8 +14,10 @@ public enum ErrorCode {
 
 	RESOURCE_NOT_FOUND(404, "Resource not found"),
 
-	INVALID_INPUT(400, "INvalid input"),
-	INTERNAL_SERVER_ERROR(500, "Internal server error");
+	INVALID_INPUT(400, "Invalid input"),
+	INTERNAL_SERVER_ERROR(500, "Internal server error"),
+
+	DUPLICATE_EMAIL(400, "Duplicate email");
 
 	private final Integer code;
 	private final String message;
