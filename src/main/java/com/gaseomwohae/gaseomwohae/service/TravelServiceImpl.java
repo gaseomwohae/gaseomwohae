@@ -11,12 +11,15 @@ import com.gaseomwohae.gaseomwohae.common.exception.exceptions.BadRequestExcepti
 import com.gaseomwohae.gaseomwohae.dto.Participant;
 import com.gaseomwohae.gaseomwohae.dto.Schedule;
 import com.gaseomwohae.gaseomwohae.dto.Travel;
+import com.gaseomwohae.gaseomwohae.dto.User;
 import com.gaseomwohae.gaseomwohae.dto.travel.CreateTravelRequestDto;
+import com.gaseomwohae.gaseomwohae.dto.travel.InviteParticipantRequestDto;
 import com.gaseomwohae.gaseomwohae.dto.travel.TravelDetailResponseDto;
 import com.gaseomwohae.gaseomwohae.dto.travel.UpdateTravelRequestDto;
 import com.gaseomwohae.gaseomwohae.repository.ParticipantRepository;
 import com.gaseomwohae.gaseomwohae.repository.ScheduleRepository;
 import com.gaseomwohae.gaseomwohae.repository.TravelRepository;
+import com.gaseomwohae.gaseomwohae.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -26,7 +29,7 @@ public class TravelServiceImpl implements TravelService {
 	private final TravelRepository travelRepository;
 	private final ParticipantRepository participantRepository;
 	private final ScheduleRepository scheduleRepository;
-
+	private final UserRepository userRepository;
 	@Override
 	public TravelDetailResponseDto getTravel(Long userId, Long travelId) {
 		Travel travel = travelRepository.findById(travelId);
@@ -76,7 +79,7 @@ public class TravelServiceImpl implements TravelService {
 			.build();
 
 		travelRepository.insert(newTravel);
-		
+
 		Participant participant = Participant.builder()
 			.travelId(newTravel.getId())
 			.userId(userId).
@@ -123,5 +126,39 @@ public class TravelServiceImpl implements TravelService {
 		}
 
 		travelRepository.delete(travelId);
+	}
+
+	@Override
+	public void inviteParticipant(Long userId, InviteParticipantRequestDto inviteParticipantRequestDto) {
+		Travel travel = travelRepository.findById(inviteParticipantRequestDto.getTravelId());
+		if (travel == null) {
+			throw new BadRequestException(ErrorCode.RESOURCE_NOT_FOUND);
+		}
+
+		// 내가 참여중인 여행인지 확인
+		Participant participant = participantRepository.findByTravelIdAndUserId(inviteParticipantRequestDto.getTravelId(), userId);
+		if (participant == null) {
+			throw new BadRequestException(ErrorCode.ACCESS_DENIED);
+		}
+
+		// 초대할 사람이 같은 여행에 참여중인지 확인
+		Participant inviteParticipant = participantRepository.findByTravelIdAndUserId(inviteParticipantRequestDto.getTravelId(), inviteParticipantRequestDto.getUserId());
+		if (inviteParticipant != null) {
+			throw new BadRequestException(ErrorCode.RESOURCE_ALREADY_EXISTS);
+		}
+
+		// 초대할 사람의 대상 유저 찾기
+		User user = userRepository.findById(inviteParticipantRequestDto.getUserId());
+		if (user == null) {
+			throw new BadRequestException(ErrorCode.RESOURCE_NOT_FOUND);
+		}
+
+		// 대상 유저를 여행에 초대
+		Participant newParticipant = Participant.builder()
+			.travelId(inviteParticipantRequestDto.getTravelId())
+			.userId(inviteParticipantRequestDto.getUserId())
+			.build();
+
+		participantRepository.insert(newParticipant);
 	}
 }

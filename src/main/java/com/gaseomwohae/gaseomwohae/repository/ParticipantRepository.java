@@ -16,6 +16,8 @@ public interface ParticipantRepository {
 
 	List<Participant> findByUserId(Long userId);
 
+	Participant findByTravelIdAndUserId(Long travelId, Long userId);
+
 	void insert(Participant participant);
 
 	void update(Participant participant);

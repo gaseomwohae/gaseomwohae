@@ -32,7 +32,7 @@ public class AuthServiceImpl implements AuthService {
 
 		User user = userRepository.findByEmail(email);
 
-		if (!passwordEncoder.matches(password, user.getPassword())) {
+		if (user == null || !passwordEncoder.matches(password, user.getPassword())) {
 			throw new BadRequestException(ErrorCode.INVALID_CREDENTIALS);
 		}
 

@@ -18,6 +18,10 @@
         SELECT * FROM participant WHERE user_id = #{userId} AND deleted_at IS NULL
     </select>
 
+    <select id="findByTravelIdAndUserId" parameterType="Participant" resultType="Participant">
+        SELECT * FROM participant WHERE travel_id = #{travelId} AND user_id = #{userId} AND deleted_at IS NULL
+    </select>
+
     <insert id="insert" parameterType="Participant" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO participant (user_id, travel_id)
         VALUES (#{userId}, #{travelId})

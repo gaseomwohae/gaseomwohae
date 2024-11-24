@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.gaseomwohae.gaseomwohae.dto.Travel;
 import com.gaseomwohae.gaseomwohae.dto.travel.CreateTravelRequestDto;
+import com.gaseomwohae.gaseomwohae.dto.travel.InviteParticipantRequestDto;
 import com.gaseomwohae.gaseomwohae.dto.travel.TravelDetailResponseDto;
 import com.gaseomwohae.gaseomwohae.dto.travel.UpdateTravelRequestDto;
 import com.gaseomwohae.gaseomwohae.service.TravelService;
@@ -52,6 +53,11 @@ public class TravelController {
 	@DeleteMapping("/{travel-id}")
 	public void deleteTravel(@AuthenticationPrincipal Long userId, @PathVariable("travel-id") Long travelId) {
 		travelService.deleteTravel(userId, travelId);
+	}
+
+	@PostMapping("/invite")
+	public void inviteParticipant(@AuthenticationPrincipal Long userId, @RequestBody InviteParticipantRequestDto inviteParticipantRequestDto) {
+		travelService.inviteParticipant(userId, inviteParticipantRequestDto);
 	}
 
 }
