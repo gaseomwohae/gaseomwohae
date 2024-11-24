@@ -3,7 +3,6 @@ package com.gaseomwohae.gaseomwohae.dto.travel;
 import java.time.LocalDate;
 
 import jakarta.validation.constraints.AssertTrue;
-import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -17,11 +16,9 @@ public class CreateTravelRequestDto {
 	private String destination;
 
 	@NotNull
-	@FutureOrPresent
 	private LocalDate startDate;
 
 	@NotNull
-	@FutureOrPresent
 	private LocalDate endDate;
 
 	@AssertTrue()
