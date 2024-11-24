@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gaseomwohae.gaseomwohae.mapper.UserMapper">
+    <select id="findAll" resultType="UserDTO">
+        SELECT * FROM user WHERE deleted_at IS NULL
+    </select>
+
+    <select id="findById" parameterType="Long" resultType="UserDTO">
+        SELECT * FROM user WHERE id = #{id} AND deleted_at IS NULL
+    </select>
+
+    <select id="findByEmail" parameterType="String" resultType="UserDTO">
+        SELECT * FROM user WHERE email = #{email} AND deleted_at IS NULL
+    </select>
+
+    <insert id="insert" parameterType="UserDTO" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO user (name, email, password, profile_image)
+        VALUES (#{name}, #{email}, #{password}, #{profileImage})
+    </insert>
+
+    <update id="update" parameterType="UserDTO">
+        UPDATE user
+        SET name = #{name},
+            email = #{email},
+            password = #{password},
+            profile_image = #{profileImage},
+            updated_at = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM user WHERE id = #{id}
+    </delete>
+
+    <update id="softDelete" parameterType="Long">
+        UPDATE user
+        SET deleted_at = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    </update>
+</mapper> 

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gaseomwohae.gaseomwohae.mapper.ScheduleMapper">
+    <select id="findAll" resultType="ScheduleDTO">
+        SELECT * FROM schedule WHERE deleted_at IS NULL
+    </select>
+
+    <select id="findById" parameterType="Long" resultType="ScheduleDTO">
+        SELECT * FROM schedule WHERE id = #{id} AND deleted_at IS NULL
+    </select>
+
+    <select id="findByTravelId" parameterType="Long" resultType="ScheduleDTO">
+        SELECT * FROM schedule WHERE travel_id = #{travelId} AND deleted_at IS NULL
+    </select>
+
+    <insert id="insert" parameterType="ScheduleDTO" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO schedule (travel_id, place_id, date, start_time, end_time)
+        VALUES (#{travelId}, #{placeId}, #{date}, #{startTime}, #{endTime})
+    </insert>
+
+    <update id="update" parameterType="ScheduleDTO">
+        UPDATE schedule
+        SET travel_id = #{travelId},
+            place_id = #{placeId},
+            date = #{date},
+            start_time = #{startTime},
+            end_time = #{endTime},
+            updated_at = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM schedule WHERE id = #{id}
+    </delete>
+
+    <update id="softDelete" parameterType="Long">
+        UPDATE schedule
+        SET deleted_at = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    </update>
+</mapper> 

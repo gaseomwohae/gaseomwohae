@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gaseomwohae.gaseomwohae.mapper.ParticipantMapper">
+    <select id="findAll" resultType="ParticipantDTO">
+        SELECT * FROM participant WHERE deleted_at IS NULL
+    </select>
+
+    <select id="findById" parameterType="Long" resultType="ParticipantDTO">
+        SELECT * FROM participant WHERE id = #{id} AND deleted_at IS NULL
+    </select>
+
+    <select id="findByTravelId" parameterType="Long" resultType="ParticipantDTO">
+        SELECT * FROM participant WHERE travel_id = #{travelId} AND deleted_at IS NULL
+    </select>
+
+    <select id="findByUserId" parameterType="Long" resultType="ParticipantDTO">
+        SELECT * FROM participant WHERE user_id = #{userId} AND deleted_at IS NULL
+    </select>
+
+    <insert id="insert" parameterType="ParticipantDTO" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO participant (user_id, travel_id)
+        VALUES (#{userId}, #{travelId})
+    </insert>
+
+    <update id="update" parameterType="ParticipantDTO">
+        UPDATE participant
+        SET user_id = #{userId},
+            travel_id = #{travelId},
+            updated_at = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM participant WHERE id = #{id}
+    </delete>
+
+    <update id="softDelete" parameterType="Long">
+        UPDATE participant
+        SET deleted_at = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    </update>
+</mapper> 
