@@ -32,12 +32,8 @@
     </update>
 
     <delete id="delete" parameterType="Long">
-        DELETE FROM participant WHERE id = #{id}
-    </delete>
-
-    <update id="softDelete" parameterType="Long">
         UPDATE participant
         SET deleted_at = CURRENT_TIMESTAMP
         WHERE id = #{id}
-    </update>
+    </delete>
 </mapper> 
