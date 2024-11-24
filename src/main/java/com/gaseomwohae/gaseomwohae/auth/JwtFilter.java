@@ -9,12 +9,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gaseomwohae.gaseomwohae.common.exception.ErrorCode;
+import com.gaseomwohae.gaseomwohae.common.exception.exceptions.BadRequestException;
+import com.gaseomwohae.gaseomwohae.common.exception.exceptions.CustomException;
+import com.gaseomwohae.gaseomwohae.common.response.ResponseForm;
 import com.gaseomwohae.gaseomwohae.dto.User;
 import com.gaseomwohae.gaseomwohae.repository.UserRepository;
-import com.gaseomwohae.gaseomwohae.util.response.ApiResponse;
-import com.gaseomwohae.gaseomwohae.util.response.CustomException;
-import com.gaseomwohae.gaseomwohae.util.response.ErrorCode;
-import com.gaseomwohae.gaseomwohae.util.response.exceptions.BadRequestException;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -58,7 +58,7 @@ public class JwtFilter
 			response.setContentType("application/json");
 			response.setStatus(e.getCode());
 			response.getWriter().write(
-				objectMapper.writeValueAsString(ApiResponse.error(e.getCode(), e.getMessage()))
+				objectMapper.writeValueAsString(ResponseForm.error(e.getCode(), e.getMessage()))
 			);
 		}
 	}

@@ -1,4 +1,6 @@
-package com.gaseomwohae.gaseomwohae.util.response;
+package com.gaseomwohae.gaseomwohae.common.exception.exceptions;
+
+import com.gaseomwohae.gaseomwohae.common.exception.ErrorCode;
 
 import lombok.Getter;
 

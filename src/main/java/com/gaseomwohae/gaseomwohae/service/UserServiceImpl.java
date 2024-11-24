@@ -3,12 +3,12 @@ package com.gaseomwohae.gaseomwohae.service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.gaseomwohae.gaseomwohae.common.exception.ErrorCode;
+import com.gaseomwohae.gaseomwohae.common.exception.exceptions.BadRequestException;
 import com.gaseomwohae.gaseomwohae.dto.User;
 import com.gaseomwohae.gaseomwohae.dto.user.GetUserInfoResponseDto;
 import com.gaseomwohae.gaseomwohae.dto.user.SignUpRequestDto;
 import com.gaseomwohae.gaseomwohae.repository.UserRepository;
-import com.gaseomwohae.gaseomwohae.util.response.ErrorCode;
-import com.gaseomwohae.gaseomwohae.util.response.exceptions.BadRequestException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -19,9 +19,7 @@ public class UserServiceImpl implements UserService {
 	private final BCryptPasswordEncoder passwordEncoder;
 
 	public void signUp(SignUpRequestDto signUpRequestDto) {
-
-		User user = userRepository.findByEmail
-			(signUpRequestDto.getEmail());
+		User user = userRepository.findByEmail(signUpRequestDto.getEmail());
 		if (user != null) {
 			throw new BadRequestException(ErrorCode.DUPLICATE_EMAIL);
 		}
@@ -39,11 +37,7 @@ public class UserServiceImpl implements UserService {
 	public GetUserInfoResponseDto getUserInfo(Long userId) {
 		User user = userRepository.findById(userId);
 
-		if (user == null) {
-			throw new BadRequestException(ErrorCode.RESOURCE_NOT_FOUND);
-		}
-
-		return new GetUserInfoResponseDto().builder()
+		return GetUserInfoResponseDto.builder()
 			.name(user.getName())
 			.email(user.getEmail())
 			.profileImage(user.getProfileImage()).build();

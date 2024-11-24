@@ -1,4 +1,4 @@
-package com.gaseomwohae.gaseomwohae.util.response;
+package com.gaseomwohae.gaseomwohae.common.exception;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

@@ -7,13 +7,10 @@ import org.springframework.stereotype.Service;
 
 import com.gaseomwohae.gaseomwohae.dto.Participant;
 import com.gaseomwohae.gaseomwohae.dto.Travel;
-import com.gaseomwohae.gaseomwohae.dto.User;
 import com.gaseomwohae.gaseomwohae.dto.travel.CreateTravelRequestDto;
 import com.gaseomwohae.gaseomwohae.repository.ParticipantRepository;
 import com.gaseomwohae.gaseomwohae.repository.TravelRepository;
 import com.gaseomwohae.gaseomwohae.repository.UserRepository;
-import com.gaseomwohae.gaseomwohae.util.response.ErrorCode;
-import com.gaseomwohae.gaseomwohae.util.response.exceptions.BadRequestException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -26,12 +23,6 @@ public class TravelServiceImpl implements TravelService {
 
 	@Override
 	public List<Travel> getTravelList(Long userId) {
-
-		User user = userRepository.findById(userId);
-		if (user == null) {
-			throw new BadRequestException(ErrorCode.RESOURCE_NOT_FOUND);
-		}
-
 		List<Participant> participantList = participantRepository.findByUserId(userId);
 
 		List<Travel> travelList = new ArrayList<>();
@@ -43,12 +34,6 @@ public class TravelServiceImpl implements TravelService {
 
 	@Override
 	public void createTravel(Long userId, CreateTravelRequestDto createTravelRequestDto) {
-		User user = userRepository.findById(userId);
-		
-		if (user == null) {
-			throw new BadRequestException(ErrorCode.RESOURCE_NOT_FOUND);
-		}
-
 		Long travelId = travelRepository.insert(Travel.builder()
 			.name(createTravelRequestDto.getName())
 			.destination(

@@ -1,4 +1,4 @@
-package com.gaseomwohae.gaseomwohae.util.response;
+package com.gaseomwohae.gaseomwohae.common.response;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
@@ -9,10 +9,8 @@ import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
-import com.gaseomwohae.gaseomwohae.util.response.ApiResponse;
-
 @RestControllerAdvice
-public class ApiResponseAdvice implements ResponseBodyAdvice<Object> {
+public class GlobalResponseHandler implements ResponseBodyAdvice<Object> {
 
 	@Override
 	public boolean supports(MethodParameter returnType, Class<? extends HttpMessageConverter<?>> converterType) {
@@ -23,6 +21,6 @@ public class ApiResponseAdvice implements ResponseBodyAdvice<Object> {
 	public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType,
 		Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request,
 		ServerHttpResponse response) {
-		return ApiResponse.success(body);
+		return ResponseForm.success(body);
 	}
 }

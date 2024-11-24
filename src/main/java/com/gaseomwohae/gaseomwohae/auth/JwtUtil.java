@@ -6,8 +6,8 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.gaseomwohae.gaseomwohae.util.response.ErrorCode;
-import com.gaseomwohae.gaseomwohae.util.response.exceptions.BadRequestException;
+import com.gaseomwohae.gaseomwohae.common.exception.ErrorCode;
+import com.gaseomwohae.gaseomwohae.common.exception.exceptions.BadRequestException;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
