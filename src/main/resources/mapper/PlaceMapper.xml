@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.gaseomwohae.gaseomwohae.mapper.PlaceMapper">
-    <select id="findAll" resultType="PlaceDTO">
+<mapper namespace="com.gaseomwohae.gaseomwohae.mapper.PlaceRepository">
+    <select id="findAll" resultType="Place">
         SELECT * FROM place WHERE deleted_at IS NULL
     </select>
 
-    <select id="findById" parameterType="Long" resultType="PlaceDTO">
+    <select id="findById" parameterType="Long" resultType="Place">
         SELECT * FROM place WHERE id = #{id} AND deleted_at IS NULL
     </select>
 
-    <select id="findByCategory" parameterType="String" resultType="PlaceDTO">
+    <select id="findByCategory" parameterType="String" resultType="Place">
         SELECT * FROM place WHERE category = #{category} AND deleted_at IS NULL
     </select>
 
-    <insert id="insert" parameterType="PlaceDTO" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insert" parameterType="Place" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO place (name, category, address, road_address, thumbnail, phone, url, x, y)
         VALUES (#{name}, #{category}, #{address}, #{roadAddress}, #{thumbnail}, #{phone}, #{url}, #{x}, #{y})
     </insert>
 
-    <update id="update" parameterType="PlaceDTO">
+    <update id="update" parameterType="Place">
         UPDATE place
         SET name = #{name},
-            category = #{category},
-            address = #{address},
-            road_address = #{roadAddress},
-            thumbnail = #{thumbnail},
-            phone = #{phone},
-            url = #{url},
-            x = #{x},
-            y = #{y},
-            updated_at = CURRENT_TIMESTAMP
+        category = #{category},
+        address = #{address},
+        road_address = #{roadAddress},
+        thumbnail = #{thumbnail},
+        phone = #{phone},
+        url = #{url},
+        x = #{x},
+        y = #{y},
+        updated_at = CURRENT_TIMESTAMP
         WHERE id = #{id}
     </update>
 
