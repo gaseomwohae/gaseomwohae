@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.gaseomwohae.gaseomwohae.mapper.ScheduleRepository">
+<mapper namespace="com.gaseomwohae.gaseomwohae.repository.ScheduleRepository">
     <select id="findAll" resultType="Schedule">
         SELECT * FROM schedule WHERE deleted_at IS NULL
     </select>
