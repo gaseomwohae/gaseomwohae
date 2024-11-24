@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.gaseomwohae.gaseomwohae.dto.Participant;
 import com.gaseomwohae.gaseomwohae.dto.Travel;
 import com.gaseomwohae.gaseomwohae.dto.User;
+import com.gaseomwohae.gaseomwohae.dto.travel.CreateTravelRequestDto;
 import com.gaseomwohae.gaseomwohae.repository.ParticipantRepository;
 import com.gaseomwohae.gaseomwohae.repository.TravelRepository;
 import com.gaseomwohae.gaseomwohae.repository.UserRepository;
@@ -38,5 +39,29 @@ public class TravelServiceImpl implements TravelService {
 			travelList.add(travelRepository.findById(participant.getTravelId()));
 		}));
 		return travelList;
+	}
+
+	@Override
+	public Void createTravel(Long userId, CreateTravelRequestDto createTravelRequestDto) {
+		User user = userRepository.findById(userId);
+		if (user == null) {
+			throw new BadRequestException(ErrorCode.RESOURCE_NOT_FOUND);
+		}
+
+		Long travelId = travelRepository.insert(Travel.builder()
+			.name(createTravelRequestDto.getName())
+			.destination(
+				createTravelRequestDto.getDestination())
+			.startDate(createTravelRequestDto.getStartDate())
+			.endDate(createTravelRequestDto.getEndDate()).build()
+		);
+
+		participantRepository.insert(Participant.builder()
+			.travelId(travelId)
+			.userId(userId).
+			build()
+		);
+
+		return null;
 	}
 }

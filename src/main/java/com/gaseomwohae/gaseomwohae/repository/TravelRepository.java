@@ -12,7 +12,7 @@ public interface TravelRepository {
 
 	Travel findById(Long id);
 
-	void insert(Travel travel);
+	Long insert(Travel travel);
 
 	void update(Travel travel);
 

@@ -3,9 +3,13 @@ package com.gaseomwohae.gaseomwohae.dto;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
+@AllArgsConstructor
 public class Travel {
 	private Long id;
 	private String name;
