@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.gaseomwohae.gaseomwohae.dto.Travel;
 import com.gaseomwohae.gaseomwohae.dto.travel.CreateTravelRequestDto;
+import com.gaseomwohae.gaseomwohae.dto.travel.TravelDetailResponseDto;
 import com.gaseomwohae.gaseomwohae.dto.travel.UpdateTravelRequestDto;
 import com.gaseomwohae.gaseomwohae.service.TravelService;
 
@@ -25,6 +26,11 @@ import lombok.RequiredArgsConstructor;
 public class TravelController {
 
 	private final TravelService travelService;
+
+	@GetMapping("/{travel-id}")
+	public TravelDetailResponseDto getTravel(@AuthenticationPrincipal Long userId, @PathVariable("travel-id") Long travelId) {
+		return travelService.getTravel(userId, travelId);
+	}
 
 	@GetMapping
 	public List<Travel> getTravelList(@AuthenticationPrincipal Long userId) {

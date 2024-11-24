@@ -17,7 +17,9 @@ public enum ErrorCode {
 	INVALID_INPUT(400, "Invalid input"),
 	INTERNAL_SERVER_ERROR(500, "Internal server error"),
 
-	DUPLICATE_EMAIL(400, "Duplicate email");
+	DUPLICATE_EMAIL(400, "Duplicate email"),
+
+	ACCESS_DENIED(403, "Access denied");
 
 	private final Integer code;
 	private final String message;

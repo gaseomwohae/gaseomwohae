@@ -9,12 +9,14 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gaseomwohae.gaseomwohae.common.exception.ErrorCode;
 import com.gaseomwohae.gaseomwohae.common.exception.exceptions.BadRequestException;
 import com.gaseomwohae.gaseomwohae.dto.Participant;
+import com.gaseomwohae.gaseomwohae.dto.Schedule;
 import com.gaseomwohae.gaseomwohae.dto.Travel;
 import com.gaseomwohae.gaseomwohae.dto.travel.CreateTravelRequestDto;
+import com.gaseomwohae.gaseomwohae.dto.travel.TravelDetailResponseDto;
 import com.gaseomwohae.gaseomwohae.dto.travel.UpdateTravelRequestDto;
 import com.gaseomwohae.gaseomwohae.repository.ParticipantRepository;
+import com.gaseomwohae.gaseomwohae.repository.ScheduleRepository;
 import com.gaseomwohae.gaseomwohae.repository.TravelRepository;
-import com.gaseomwohae.gaseomwohae.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,7 +25,28 @@ import lombok.RequiredArgsConstructor;
 public class TravelServiceImpl implements TravelService {
 	private final TravelRepository travelRepository;
 	private final ParticipantRepository participantRepository;
-	private final UserRepository userRepository;
+	private final ScheduleRepository scheduleRepository;
+
+	@Override
+	public TravelDetailResponseDto getTravel(Long userId, Long travelId) {
+		Travel travel = travelRepository.findById(travelId);
+		if (travel == null) {
+			throw new BadRequestException(ErrorCode.RESOURCE_NOT_FOUND);
+		}
+
+		List<Participant> participantList = participantRepository.findByTravelId(travelId);
+		if (!participantList.stream().anyMatch(participant -> participant.getUserId().equals(userId))) {
+			throw new BadRequestException(ErrorCode.ACCESS_DENIED);
+		}
+
+		List<Schedule> scheduleList = scheduleRepository.findByTravelId(travelId);
+
+		return TravelDetailResponseDto.builder()
+			.travel(travel)
+			.participants(participantList)
+			.schedules(scheduleList)
+			.build();
+	}
 
 	@Override
 	public List<Travel> getTravelList(Long userId) {
