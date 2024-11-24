@@ -8,6 +8,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gaseomwohae.gaseomwohae.dto.User;
+import com.gaseomwohae.gaseomwohae.repository.UserRepository;
+import com.gaseomwohae.gaseomwohae.util.response.ApiResponse;
+import com.gaseomwohae.gaseomwohae.util.response.CustomException;
+import com.gaseomwohae.gaseomwohae.util.response.ErrorCode;
+import com.gaseomwohae.gaseomwohae.util.response.exceptions.BadRequestException;
+
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,6 +29,8 @@ import lombok.extern.slf4j.Slf4j;
 public class JwtFilter
 	extends OncePerRequestFilter {
 
+	private final ObjectMapper objectMapper;
+	private final UserRepository userRepository;
 	private final JwtUtil jwtUtil;
 	private final CookieUtil cookieUtil;
 
@@ -30,19 +40,27 @@ public class JwtFilter
 
 		try {
 			cookieUtil.extractAccessToken(request)
-				.filter(jwtUtil::validateToken)
 				.ifPresent(token -> {
+					jwtUtil.validateToken(token);
 					Long userId = jwtUtil.getUserIdFromToken(token);
+					User user = userRepository.findById(userId);
+					if (user == null) {
+						throw new BadRequestException(ErrorCode.RESOURCE_NOT_FOUND);
+					}
 					UsernamePasswordAuthenticationToken authentication =
 						new UsernamePasswordAuthenticationToken(userId, null, null);
 					SecurityContextHolder.getContext().setAuthentication(authentication);
 				});
 
-		} catch (Exception e) {
-			log.error("Could not set user authentication in security context", e);
+			filterChain.doFilter(request, response);
+		} catch (CustomException e) {
+			SecurityContextHolder.clearContext();
+			response.setContentType("application/json");
+			response.setStatus(e.getCode());
+			response.getWriter().write(
+				objectMapper.writeValueAsString(ApiResponse.error(e.getCode(), e.getMessage()))
+			);
 		}
-
-		filterChain.doFilter(request, response);
 	}
 
 	@Override
