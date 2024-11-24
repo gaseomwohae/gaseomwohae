@@ -42,8 +42,9 @@ public class TravelServiceImpl implements TravelService {
 	}
 
 	@Override
-	public Void createTravel(Long userId, CreateTravelRequestDto createTravelRequestDto) {
+	public void createTravel(Long userId, CreateTravelRequestDto createTravelRequestDto) {
 		User user = userRepository.findById(userId);
+		
 		if (user == null) {
 			throw new BadRequestException(ErrorCode.RESOURCE_NOT_FOUND);
 		}
@@ -53,7 +54,8 @@ public class TravelServiceImpl implements TravelService {
 			.destination(
 				createTravelRequestDto.getDestination())
 			.startDate(createTravelRequestDto.getStartDate())
-			.endDate(createTravelRequestDto.getEndDate()).build()
+			.endDate(createTravelRequestDto.getEndDate())
+			.build()
 		);
 
 		participantRepository.insert(Participant.builder()
@@ -61,7 +63,5 @@ public class TravelServiceImpl implements TravelService {
 			.userId(userId).
 			build()
 		);
-
-		return null;
 	}
 }

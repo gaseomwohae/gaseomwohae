@@ -8,5 +8,5 @@ import com.gaseomwohae.gaseomwohae.dto.travel.CreateTravelRequestDto;
 public interface TravelService {
 	public List<Travel> getTravelList(Long userId);
 
-	public Void createTravel(Long userId, CreateTravelRequestDto createTravelRequestDto);
+	public void createTravel(Long userId, CreateTravelRequestDto createTravelRequestDto);
 }
