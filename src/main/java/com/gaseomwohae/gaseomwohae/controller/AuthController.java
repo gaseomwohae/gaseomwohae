@@ -14,6 +14,7 @@ import com.gaseomwohae.gaseomwohae.dto.auth.LoginRequestDto;
 import com.gaseomwohae.gaseomwohae.service.AuthService;
 import com.gaseomwohae.gaseomwohae.util.response.ApiResponse;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -25,7 +26,7 @@ public class AuthController {
 
 	@PostMapping("/login")
 	public ResponseEntity<ApiResponse<Void>> login(@AuthenticationPrincipal Long userId,
-		@RequestBody LoginRequestDto loginRequestDto) {
+		@RequestBody @Valid LoginRequestDto loginRequestDto) {
 
 		ResponseCookie cookie = authService.login(loginRequestDto);
 
