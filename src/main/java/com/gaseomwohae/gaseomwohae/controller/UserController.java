@@ -33,6 +33,5 @@ public class UserController {
 	public ResponseEntity<ApiResponse<GetUserInfoResponseDto>> getUserInfo(@AuthenticationPrincipal Long userId) {
 		GetUserInfoResponseDto user = userService.getUserInfo(userId);
 		return ResponseEntity.ok(ApiResponse.success(user));
-
 	}
 }
