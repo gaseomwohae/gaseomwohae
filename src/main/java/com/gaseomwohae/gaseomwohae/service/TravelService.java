@@ -2,9 +2,9 @@ package com.gaseomwohae.gaseomwohae.service;
 
 import java.util.List;
 
-import com.gaseomwohae.gaseomwohae.dto.Invite;
 import com.gaseomwohae.gaseomwohae.dto.Travel;
 import com.gaseomwohae.gaseomwohae.dto.travel.CreateTravelRequestDto;
+import com.gaseomwohae.gaseomwohae.dto.travel.InviteListResponseDto;
 import com.gaseomwohae.gaseomwohae.dto.travel.InviteParticipantRequestDto;
 import com.gaseomwohae.gaseomwohae.dto.travel.TravelDetailResponseDto;
 import com.gaseomwohae.gaseomwohae.dto.travel.UpdateTravelRequestDto;
@@ -22,7 +22,7 @@ public interface TravelService {
 
 	public void inviteParticipant(Long userId, InviteParticipantRequestDto inviteParticipantRequestDto);
 
-	public List<Invite> getInviteList(Long userId);
+	public List<InviteListResponseDto> getInviteList(Long userId);
 
 	public void acceptInvite(Long userId, Long inviteId);
 

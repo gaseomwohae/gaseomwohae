@@ -15,6 +15,7 @@ import com.gaseomwohae.gaseomwohae.dto.Schedule;
 import com.gaseomwohae.gaseomwohae.dto.Travel;
 import com.gaseomwohae.gaseomwohae.dto.User;
 import com.gaseomwohae.gaseomwohae.dto.travel.CreateTravelRequestDto;
+import com.gaseomwohae.gaseomwohae.dto.travel.InviteListResponseDto;
 import com.gaseomwohae.gaseomwohae.dto.travel.InviteParticipantRequestDto;
 import com.gaseomwohae.gaseomwohae.dto.travel.TravelDetailResponseDto;
 import com.gaseomwohae.gaseomwohae.dto.travel.UpdateTravelRequestDto;
@@ -199,8 +200,34 @@ public class TravelServiceImpl implements TravelService {
 	}
 
 	@Override
-	public List<Invite> getInviteList(Long userId) {
-		return inviteRepository.findManyByInvitedUserId(userId);
+	public List<InviteListResponseDto> getInviteList(Long userId) {
+		List<Invite> inviteList = inviteRepository.findManyByInvitedUserId(userId);
+
+		List<InviteListResponseDto> inviteListResponseDtoList = new ArrayList<>();
+		inviteList.forEach((invite) -> {
+			Travel travel = travelRepository.findById(invite.getTravelId());
+			inviteListResponseDtoList.add(InviteListResponseDto.builder()
+				.inviteId(invite.getId())
+				.travel(travel)
+				.inviterUser(GetUserInfoResponseDto.builder()
+					.id(invite.getInviterUserId())
+					.name(userRepository.findById(invite.getInviterUserId()).getName())
+					.email(userRepository.findById(invite.getInviterUserId()).getEmail())
+					.profileImage(userRepository.findById(invite.getInviterUserId()).getProfileImage())
+					.createdAt(userRepository.findById(invite.getInviterUserId()).getCreatedAt())
+					.build())
+				.invitedUser(GetUserInfoResponseDto.builder()
+					.id(invite.getInvitedUserId())
+					.name(userRepository.findById(invite.getInvitedUserId()).getName())
+					.email(userRepository.findById(invite.getInvitedUserId()).getEmail())
+					.profileImage(userRepository.findById(invite.getInvitedUserId()).getProfileImage())
+					.createdAt(userRepository.findById(invite.getInvitedUserId()).getCreatedAt())
+					.build())
+				.createdAt(invite.getCreatedAt())
+				.build());
+		});
+
+		return inviteListResponseDtoList;
 	}
 
 	@Override

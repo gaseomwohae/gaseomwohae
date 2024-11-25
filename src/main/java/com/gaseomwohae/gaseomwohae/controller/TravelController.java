@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.gaseomwohae.gaseomwohae.dto.Invite;
 import com.gaseomwohae.gaseomwohae.dto.Travel;
 import com.gaseomwohae.gaseomwohae.dto.travel.CreateTravelRequestDto;
+import com.gaseomwohae.gaseomwohae.dto.travel.InviteListResponseDto;
 import com.gaseomwohae.gaseomwohae.dto.travel.InviteParticipantRequestDto;
 import com.gaseomwohae.gaseomwohae.dto.travel.TravelDetailResponseDto;
 import com.gaseomwohae.gaseomwohae.dto.travel.UpdateTravelRequestDto;
@@ -62,7 +62,7 @@ public class TravelController {
 	}
 
 	@GetMapping("/invite")
-	public List<Invite> getInviteList(@AuthenticationPrincipal Long userId) {
+	public List<InviteListResponseDto> getInviteList(@AuthenticationPrincipal Long userId) {
 		return travelService.getInviteList(userId);
 	}
 

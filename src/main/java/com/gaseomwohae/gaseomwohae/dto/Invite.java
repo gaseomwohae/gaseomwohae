@@ -1,6 +1,6 @@
 package com.gaseomwohae.gaseomwohae.dto;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,7 +14,7 @@ public class Invite {
     private Long inviterUserId;
     private Long invitedUserId;
     private Long travelId;
-    private Timestamp createdAt;
-    private Timestamp updatedAt;
-    private Timestamp deletedAt;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+    private LocalDateTime deletedAt;
 }
