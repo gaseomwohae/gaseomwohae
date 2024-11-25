@@ -81,6 +81,24 @@ public class ScheduleServiceImpl implements ScheduleService {
 	}
 
 	@Override
+	public List<Schedule> getSchedules(Long userId, Long travelId) {
+
+		// 여행 존재 체크
+		Travel travel = travelRepository.findById(travelId);
+		if (travel == null) {
+			throw new BadRequestException(ErrorCode.RESOURCE_NOT_FOUND);
+		}
+
+		// 여행 참여자인지 체크
+		Participant participant = participantRepository.findByTravelIdAndUserId(travelId, userId);
+		if (participant == null) {
+			throw new BadRequestException(ErrorCode.ACCESS_DENIED);
+		}
+
+		return scheduleRepository.findByTravelId(travelId);
+	}
+
+	@Override
 	public void updateSchedule(Long userId, Long scheduleId, UpdateScheduleRequestDto updateScheduleRequestDto) {
 		LocalTime startTime = updateScheduleRequestDto.getStartTime();
 		LocalTime endTime = updateScheduleRequestDto.getEndTime();
