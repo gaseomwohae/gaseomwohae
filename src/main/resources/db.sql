@@ -102,6 +102,43 @@ CREATE TABLE region (
 
 
 
+
+INSERT INTO `user` (name, email, password, profile_image) VALUES
+('최민주', 'mj@test.com', '$10$LgIpd9SumLGJ7LlmseGYLO8i.oDrtPTcslT2LDDWWa6XX4pY0OXBC', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbQ8xRzthg_qgouk4QtfwcrE-VRPV3uwrX7w&s'),
+('김정현', 'jh@test.com', '$10$LgIpd9SumLGJ7LlmseGYLO8i.oDrtPTcslT2LDDWWa6XX4pY0OXBC', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpCeJsxIfIaL178Ees1C1-Q-WiZwSMVS3WhQ&s');
+
+
+INSERT INTO `travel` (name, destination, start_date, end_date, budget) VALUES
+('부산여행', '부산광역시', '2024-10-11', '2024-10-15', 200000),
+('서울여행', '서울특별시', '2023-12-20', '2024-12-21', 300000);
+
+INSERT INTO `participant` (user_id, travel_id) VALUES
+(1, 1),
+(2, 2);
+
+
+INSERT INTO `place` (name, thumbnail, category, address, road_address, phone, url, y, x) VALUES
+('부산 해운대 해수욕장', 'https://search.pstatic.net/common/?src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20150831_219%2F1440992305953sjrCF_JPEG%2F157155537056075_0.jpg', '해수욕장', '부산광역시 해운대구', '부산광역시 해운대구 해운대해변로 100', '051-123-4567', 'https://www.haeundae.go.kr', 35.159520, 129.155640),
+('서울 경복궁', 'https://search.pstatic.net/common/?src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20150831_251%2F1440997727845NDP0Y_JPEG%2F11571707_2.jpg', '고궁,궁', '서울특별시 종로구', '서울특별시 종로구 사직로 161', '02-12304567', 'https://www.gyeongbokgung.go.kr', 37.579883, 126.976945),
+('조선호텔 웨스틴조선 부산', 'https://search.pstatic.net/common/?src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20230504_283%2F1683190831894in3WR_PNG%2F%25C1%25A6%25B8%25F1_%25BE%25F8%25C0%25BD.png', '숙박', '부산광역시 해운대구', '부산광역시 해운대구 해운대해변로 100', '051-123-4567', 'https://www.haeundae.go.kr', 35.159520, 129.155640),
+('신라스테이 광화문', 'https://search.pstatic.net/common/?src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20221213_179%2F1670914401246SltDU_JPEG%2F%25C5%25A9%25B1%25E2%25BA%25AF%25C8%25AF%25B7%25CE%25BA%25F1_1.jpg', '숙박', '서울특별시 종로구', '서울특별시 종로구 사직로 161', '02-12304567', 'https://www.gyeongbokgung.go.kr', 37.579883, 126.976945);
+
+-- 리뷰 데이터 추가
+INSERT INTO `review` (user_id, place_id, rating, content, image, created_at) VALUES
+(1, 1, 5, '정말 멋진 장소였어요! 분위기도 좋고 서비스도 훌륭했어요.', 'https://search.pstatic.net/common/?src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20150831_219%2F1440992305953sjrCF_JPEG%2F157155537056075_0.jpg',NOW()),
+(1, 2, 4, '음식이 아주 맛있었고, 직원들이 친절했습니다. 다만, 기다리는 시간이 조금 길었어요.', 'https://search.pstatic.net/common/?src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20150831_251%2F1440997727845NDP0Y_JPEG%2F11571707_2.jpg', NOW()),
+(2, 3, 3, '위치는 좋지만, 시설이 조금 낡았습니다. 가격 대비 만족도가 낮았어요.', 'https://search.pstatic.net/common/?src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20230504_283%2F1683190831894in3WR_PNG%2F%25C1%25A6%25B8%25F1_%25BE%25F8%25C0%25BD.png', NOW()),
+(2, 4, 5, '여기서의 경험은 정말 기억에 남아요. 분위기와 음식 모두 최고였어요!', 'https://search.pstatic.net/common/?src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20221213_179%2F1670914401246SltDU_JPEG%2F%25C5%25A9%25B1%25E2%25BA%25AF%25C8%25AF%25B7%25CE%25BA%25F1_1.jpg', NOW());
+
+
+
+INSERT INTO `schedule` (travel_id, place_id, date, start_time, end_time) VALUES
+(1, 1, '2024-10-11', '10:00:00', '12:00:00'),
+(1, 3, '2024-10-11', '13:00:00', '16:00:00'),
+(2, 2, '2023-12-20', '11:00:00', '19:00:00'),
+(2, 4, '2023-12-20', '20:00:00', '23:00:00');
+
+
 INSERT INTO region (city, district, x, y) VALUES
 ('서울특별시', '종로구', 126.9794, 37.5729),
 ('서울특별시', '중구', 126.9970, 37.5641),
