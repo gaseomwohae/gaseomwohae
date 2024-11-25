@@ -93,13 +93,26 @@ CREATE TABLE `participant` (
 );
 
 CREATE TABLE region (
-    id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
-    city VARCHAR(255),                  -- 시/도 (예: 서울특별시)
-    district VARCHAR(255),              -- 구/군 (예: 종로구)
-    x DECIMAL(9, 6),             -- 경도 
-    y DECIMAL(9, 6)             -- 위도
+    `id` INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    `city` VARCHAR(255),                  -- 시/도 (예: 서울특별시)
+    `district` VARCHAR(255),              -- 구/군 (예: 종로구)
+    `x` DECIMAL(9, 6),             -- 경도 
+    `y` DECIMAL(9, 6)             -- 위도
 );
 
+
+CREATE TABLE `supplies` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    `name` VARCHAR(255) NOT NULL,
+    `image` VARCHAR(500) NOT NULL,
+    `category` VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE `travel_supplies` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    `travel_id` INT NOT NULL,
+    `supplies_id` INT NOT NULL
+);
 
 
 
@@ -423,3 +436,92 @@ INSERT INTO region (city, district, x, y) VALUES
 ('제주도', '제주시', 126.5312, 33.4996),
 ('제주도', '서귀포시', 126.5093, 33.2479);
 
+
+-- REQUIRED 카테고리 데이터 삽입
+INSERT INTO supplies (name, image, category) VALUES
+('여권', '/src/assets/icons/supplies/requiredSupplies/passport.png', 'REQUIRED'),
+('비자', '/src/assets/icons/supplies/requiredSupplies/visa.png', 'REQUIRED'),
+('여권용 증명사진', '/src/assets/icons/supplies/requiredSupplies/photo.png', 'REQUIRED'),
+('항공티켓', '/src/assets/icons/supplies/requiredSupplies/ticket-flight.png', 'REQUIRED'),
+('공항리무진티켓', '/src/assets/icons/supplies/requiredSupplies/limousine.png', 'REQUIRED'),
+('호텔바우처', '/src/assets/icons/supplies/requiredSupplies/voucher.png', 'REQUIRED'),
+('결제용카드', '/src/assets/icons/supplies/requiredSupplies/credit-card.png', 'REQUIRED'),
+('국내운전면허증', '/src/assets/icons/supplies/requiredSupplies/driving-license.png', 'REQUIRED'),
+('국제운전면허증', '/src/assets/icons/supplies/requiredSupplies/driving-license.png', 'REQUIRED'),
+('여행자보험증', '/src/assets/icons/supplies/requiredSupplies/health-insurance.png', 'REQUIRED'),
+('유심', '/src/assets/icons/supplies/requiredSupplies/sim.png', 'REQUIRED');
+
+
+-- ELECTRONIC 카테고리 데이터 삽입
+INSERT INTO supplies (name, image, category) VALUES
+('노트북', '/src/assets/icons/supplies/electronicSupplies/laptop.png', 'ELECTRONIC'),
+('카메라', '/src/assets/icons/supplies/electronicSupplies/camera.png', 'ELECTRONIC'),
+('카메라 충전기', '/src/assets/icons/supplies/electronicSupplies/charger.png', 'ELECTRONIC'),
+('노트북 충전기', '/src/assets/icons/supplies/electronicSupplies/charger.png', 'ELECTRONIC'),
+('핸드폰 충전기', '/src/assets/icons/supplies/electronicSupplies/charger.png', 'ELECTRONIC'),
+('태블릿', '/src/assets/icons/supplies/electronicSupplies/tablet.png', 'ELECTRONIC'),
+('태블릿 충전기', '/src/assets/icons/supplies/electronicSupplies/charger.png', 'ELECTRONIC'),
+('워치', '/src/assets/icons/supplies/electronicSupplies/smart-watch.png', 'ELECTRONIC'),
+('워치 충전기', '/src/assets/icons/supplies/electronicSupplies/charger.png', 'ELECTRONIC'),
+('멀티어댑터', '/src/assets/icons/supplies/electronicSupplies/power-strip.png', 'ELECTRONIC'),
+('이어폰', '/src/assets/icons/supplies/electronicSupplies/earphones.png', 'ELECTRONIC'),
+('스피커', '/src/assets/icons/supplies/electronicSupplies/speaker.png', 'ELECTRONIC'),
+('드라이기', '/src/assets/icons/supplies/electronicSupplies/hair-dryer.png', 'ELECTRONIC'),
+('SD카드', '/src/assets/icons/supplies/electronicSupplies/sd-card.png', 'ELECTRONIC'),
+('셀카봉', '/src/assets/icons/supplies/electronicSupplies/selfie-stick.png', 'ELECTRONIC');
+
+
+-- BEAUTY 카테고리 데이터 삽입
+INSERT INTO supplies (name, image, category) VALUES
+('스킨 로션', '/src/assets/icons/supplies/beautySupplies/lotion.png', 'BEAUTY'),
+('자외선 차단제', '/src/assets/icons/supplies/beautySupplies/sun-cream.png', 'BEAUTY'),
+('화장품', '/src/assets/icons/supplies/beautySupplies/cosmetics.png', 'BEAUTY'),
+('헤어 에센스', '/src/assets/icons/supplies/beautySupplies/hair-conditioner.png', 'BEAUTY'),
+('롤', '/src/assets/icons/supplies/beautySupplies/hair-roll.png', 'BEAUTY'),
+('향수', '/src/assets/icons/supplies/beautySupplies/perfume.png', 'BEAUTY'),
+('화장솜 면봉', '/src/assets/icons/supplies/beautySupplies/cotton-buds.png', 'BEAUTY'),
+('렌즈 안경', '/src/assets/icons/supplies/beautySupplies/glasses.png', 'BEAUTY'),
+('샴푸 린스', '/src/assets/icons/supplies/beautySupplies/shampoo.png', 'BEAUTY'),
+('바디 워시', '/src/assets/icons/supplies/beautySupplies/body-wash.png', 'BEAUTY'),
+('칫솔 치약', '/src/assets/icons/supplies/beautySupplies/toothbrush.png', 'BEAUTY'),
+('클렌징', '/src/assets/icons/supplies/beautySupplies/cleansing.png', 'BEAUTY'),
+('면도기', '/src/assets/icons/supplies/beautySupplies/shaver.png', 'BEAUTY');
+
+-- ETC 카테고리 데이터 삽입
+INSERT INTO supplies (name, image, category) VALUES
+('수영복', '/src/assets/icons/supplies/etcSupplies/swimsuit.png', 'ETC'),
+('물안경', '/src/assets/icons/supplies/etcSupplies/swimming-glasses.png', 'ETC'),
+('튜브', '/src/assets/icons/supplies/etcSupplies/tube.png', 'ETC'),
+('지퍼백', '/src/assets/icons/supplies/etcSupplies/zip-bag.png', 'ETC'),
+('우산', '/src/assets/icons/supplies/etcSupplies/umbrella.png', 'ETC'),
+('간식', '/src/assets/icons/supplies/etcSupplies/snacks.png', 'ETC'),
+('컵라면', '/src/assets/icons/supplies/etcSupplies/noodles.png', 'ETC'),
+('손톱깍이', '/src/assets/icons/supplies/etcSupplies/nail-clipper.png', 'ETC'),
+('물티슈', '/src/assets/icons/supplies/etcSupplies/wet-wipes.png', 'ETC');
+
+-- CLOTHES 카테고리 데이터 삽입
+INSERT INTO supplies (name, image, category) VALUES
+('옷', '/src/assets/icons/supplies/clothesSupplies/clothes.png', 'CLOTHES'),
+('속옷', '/src/assets/icons/supplies/clothesSupplies/underwear.png', 'CLOTHES'),
+('잠옷', '/src/assets/icons/supplies/clothesSupplies/pajamas.png', 'CLOTHES'),
+('양말', '/src/assets/icons/supplies/clothesSupplies/socks.png', 'CLOTHES'),
+('선글라스', '/src/assets/icons/supplies/clothesSupplies/sun-glasses.png', 'CLOTHES'),
+('가방', '/src/assets/icons/supplies/clothesSupplies/bag.png', 'CLOTHES'),
+('모자', '/src/assets/icons/supplies/clothesSupplies/cap.png', 'CLOTHES'),
+('슬리퍼', '/src/assets/icons/supplies/clothesSupplies/slippers.png', 'CLOTHES');
+
+-- EMERGENCY 카테고리 데이터 삽입
+INSERT INTO supplies (name, image, category) VALUES
+('비타민', '/src/assets/icons/supplies/emergencySupplies/vitamins.png', 'EMERGENCY'),
+('소화제', '/src/assets/icons/supplies/emergencySupplies/medicine.png', 'EMERGENCY'),
+('지사제', '/src/assets/icons/supplies/emergencySupplies/medicine.png', 'EMERGENCY'),
+('소염제', '/src/assets/icons/supplies/emergencySupplies/medicine.png', 'EMERGENCY'),
+('종합 감기약', '/src/assets/icons/supplies/emergencySupplies/medicine.png', 'EMERGENCY'),
+('진통제', '/src/assets/icons/supplies/emergencySupplies/medicine.png', 'EMERGENCY'),
+('멀미약', '/src/assets/icons/supplies/emergencySupplies/medicine.png', 'EMERGENCY'),
+('밴드', '/src/assets/icons/supplies/emergencySupplies/band.png', 'EMERGENCY'),
+('손 세정제', '/src/assets/icons/supplies/emergencySupplies/sanitizer.png', 'EMERGENCY');
+
+
+select * from user;
+commit;
