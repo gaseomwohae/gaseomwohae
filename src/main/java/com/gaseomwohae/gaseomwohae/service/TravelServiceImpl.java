@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gaseomwohae.gaseomwohae.common.exception.ErrorCode;
 import com.gaseomwohae.gaseomwohae.common.exception.exceptions.BadRequestException;
+import com.gaseomwohae.gaseomwohae.dto.schedule.ScheduleDetailResponseDto;
 import com.gaseomwohae.gaseomwohae.dto.travel.AddSupplyRequestDto;
 import com.gaseomwohae.gaseomwohae.dto.travel.CreateTravelRequestDto;
 import com.gaseomwohae.gaseomwohae.dto.travel.DeleteSupplyRequestDto;
@@ -105,7 +107,13 @@ public class TravelServiceImpl implements TravelService {
 		return TravelDetailResponseDto.builder()
 			.travel(travel)
 			.participants(participants)
-			.schedules(scheduleList)
+			.schedules(scheduleList.stream().map(schedule -> ScheduleDetailResponseDto.builder()
+				.scheduleId(schedule.getId())
+				.date(schedule.getDate())
+				.startTime(schedule.getStartTime())
+				.endTime(schedule.getEndTime())
+				.place(placeRepository.findById(schedule.getPlaceId()))
+				.build()).collect(Collectors.toList()))
 			.accommodations(accommodations)
 			.supplies(suppliesByCategory)
 			.build();
