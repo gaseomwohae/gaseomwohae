@@ -2,9 +2,13 @@ package com.gaseomwohae.gaseomwohae.model;
 
 import java.time.LocalDateTime;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
+@AllArgsConstructor	
 public class Review {
 	private Long id;
 	private Long userId;
