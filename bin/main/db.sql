@@ -104,8 +104,8 @@ CREATE TABLE region (
 
 
 INSERT INTO `user` (name, email, password, profile_image) VALUES
-('최민주', 'mj@test.com', '$10$LgIpd9SumLGJ7LlmseGYLO8i.oDrtPTcslT2LDDWWa6XX4pY0OXBC', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbQ8xRzthg_qgouk4QtfwcrE-VRPV3uwrX7w&s'),
-('김정현', 'jh@test.com', '$10$LgIpd9SumLGJ7LlmseGYLO8i.oDrtPTcslT2LDDWWa6XX4pY0OXBC', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpCeJsxIfIaL178Ees1C1-Q-WiZwSMVS3WhQ&s');
+('최민주', 'mj@test.com', '$2a$10$eqFTXXeZxDrV5JTRgATrjuPMNgErTVo8F4.Du3GSsbsS6pQBwlL.y', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbQ8xRzthg_qgouk4QtfwcrE-VRPV3uwrX7w&s'),
+('김정현', 'jh@test.com', '$2a$10$eqFTXXeZxDrV5JTRgATrjuPMNgErTVo8F4.Du3GSsbsS6pQBwlL.y', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpCeJsxIfIaL178Ees1C1-Q-WiZwSMVS3WhQ&s');
 
 
 INSERT INTO `travel` (name, destination, start_date, end_date, budget) VALUES
