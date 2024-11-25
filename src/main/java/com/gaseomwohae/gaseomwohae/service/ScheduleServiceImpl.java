@@ -7,12 +7,12 @@ import org.springframework.stereotype.Service;
 
 import com.gaseomwohae.gaseomwohae.common.exception.ErrorCode;
 import com.gaseomwohae.gaseomwohae.common.exception.exceptions.BadRequestException;
+import com.gaseomwohae.gaseomwohae.dto.schedule.CreateScheduleRequestDto;
+import com.gaseomwohae.gaseomwohae.dto.schedule.UpdateScheduleRequestDto;
 import com.gaseomwohae.gaseomwohae.model.Participant;
 import com.gaseomwohae.gaseomwohae.model.Place;
 import com.gaseomwohae.gaseomwohae.model.Schedule;
 import com.gaseomwohae.gaseomwohae.model.Travel;
-import com.gaseomwohae.gaseomwohae.dto.schedule.CreateScheduleRequestDto;
-import com.gaseomwohae.gaseomwohae.dto.schedule.UpdateScheduleRequestDto;
 import com.gaseomwohae.gaseomwohae.repository.ParticipantRepository;
 import com.gaseomwohae.gaseomwohae.repository.PlaceRepository;
 import com.gaseomwohae.gaseomwohae.repository.ScheduleRepository;
@@ -29,7 +29,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 	private final ParticipantRepository participantRepository;
 
 	@Override
-	public void createSchedule(Long userId, CreateScheduleRequestDto createScheduleRequestDto) {
+	public Schedule createSchedule(Long userId, CreateScheduleRequestDto createScheduleRequestDto) {
 
 		// 여행 존재 체크
 		Travel travel = travelRepository.findById(createScheduleRequestDto.getTravelId());
@@ -49,7 +49,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 		if (participant == null) {
 			throw new BadRequestException(ErrorCode.ACCESS_DENIED);
 		}
-		
+
 		// 일정 겹치는지 체크
 		List<Schedule> scheduleList = scheduleRepository.findByTravelId(createScheduleRequestDto.getTravelId());
 
@@ -57,7 +57,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 			.filter(schedule -> schedule.getDate().equals(createScheduleRequestDto.getDate()))
 			.anyMatch(schedule -> checkOverlap(schedule.getStartTime(), schedule.getEndTime(),
 				createScheduleRequestDto.getStartTime(), createScheduleRequestDto.getEndTime()));
-		
+
 		if (isOverlap) {
 			throw new BadRequestException(ErrorCode.INVALID_INPUT);
 		}
@@ -66,7 +66,6 @@ public class ScheduleServiceImpl implements ScheduleService {
 		if (!checkInterval(createScheduleRequestDto.getStartTime(), createScheduleRequestDto.getEndTime())) {
 			throw new BadRequestException(ErrorCode.INVALID_INPUT);
 		}
-
 
 		Schedule schedule = Schedule.builder()
 			.travelId(createScheduleRequestDto.getTravelId())
@@ -77,6 +76,8 @@ public class ScheduleServiceImpl implements ScheduleService {
 			.build();
 
 		scheduleRepository.insert(schedule);
+
+		return schedule;
 	}
 
 	@Override
@@ -112,7 +113,6 @@ public class ScheduleServiceImpl implements ScheduleService {
 			throw new BadRequestException(ErrorCode.INVALID_INPUT);
 		}
 
-	
 		Schedule updatedSchedule = Schedule.builder()
 			.id(scheduleId)
 			.date(schedule.getDate())
@@ -128,7 +128,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 	@Override
 	public void deleteSchedule(Long userId, Long scheduleId) {
-		
+
 		// 일정 존재 체크
 		Schedule schedule = scheduleRepository.findById(scheduleId);
 		if (schedule == null) {

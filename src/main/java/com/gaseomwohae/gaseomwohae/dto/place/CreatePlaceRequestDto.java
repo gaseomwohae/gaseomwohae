@@ -16,7 +16,7 @@ public class CreatePlaceRequestDto {
 	private String category;
 
 	private String address;
-    
+
 	private String roadAddress;
 
 	private String thumbnail;
