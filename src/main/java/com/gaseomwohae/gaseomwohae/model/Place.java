@@ -19,8 +19,8 @@ public class Place {
 	private String thumbnail;
 	private String phone;
 	private String url;
-	private BigDecimal x;
 	private BigDecimal y;
+	private BigDecimal x;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
 	private LocalDateTime deletedAt;

@@ -23,7 +23,7 @@ public class CreatePlaceRequestDto {
     @NotBlank
 	private String url;
     @NotNull
-	private BigDecimal x;
-    @NotNull
 	private BigDecimal y;
+    @NotNull
+	private BigDecimal x;
 }
