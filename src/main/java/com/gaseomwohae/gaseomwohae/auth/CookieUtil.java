@@ -17,7 +17,7 @@ public class CookieUtil {
 			.secure(true)
 			.path("/")
 			.maxAge(30 * 60)
-			.sameSite("Strict")
+			.sameSite("None")
 			.build();
 	}
 
@@ -27,7 +27,7 @@ public class CookieUtil {
 			.secure(true)
 			.path("/api/auth/refresh")
 			.maxAge(7 * 24 * 60 * 60)
-			.sameSite("Strict")
+			.sameSite("None")
 			.build();
 	}
 
@@ -37,7 +37,7 @@ public class CookieUtil {
 			.secure(true)
 			.path("/")
 			.maxAge(0)
-			.sameSite("Strict")
+			.sameSite("None")
 			.build();
 	}
 
@@ -47,7 +47,7 @@ public class CookieUtil {
 			.secure(true)
 			.path("/api/auth/refresh")
 			.maxAge(0)
-			.sameSite("Strict")
+			.sameSite("None")
 			.build();
 	}
 
