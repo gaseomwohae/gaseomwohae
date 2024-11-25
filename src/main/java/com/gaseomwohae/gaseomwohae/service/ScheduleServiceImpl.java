@@ -106,7 +106,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 		List<Schedule> scheduleList = scheduleRepository.findByTravelId(schedule.getTravelId());
 
 		boolean isOverlap = scheduleList.stream()
-			.filter(s -> s.getDate().equals(schedule.getDate()))
+			.filter(s -> s.getDate().equals(schedule.getDate()) && !scheduleId.equals(s.getId()))
 			.anyMatch(s -> checkOverlap(s.getStartTime(), s.getEndTime(), startTime, endTime));
 
 		if (isOverlap) {
