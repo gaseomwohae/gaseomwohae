@@ -22,4 +22,6 @@ public class ScheduleController {
     public void createSchedule(@AuthenticationPrincipal Long userId, @RequestBody @Valid CreateScheduleRequestDto createScheduleRequestDto) {
         scheduleService.createSchedule(userId, createScheduleRequestDto);
     }
+
+    
 }

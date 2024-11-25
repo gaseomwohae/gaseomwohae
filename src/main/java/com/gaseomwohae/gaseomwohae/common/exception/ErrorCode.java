@@ -20,7 +20,9 @@ public enum ErrorCode {
 	DUPLICATE_EMAIL(400, "Duplicate email"),
 
 	ACCESS_DENIED(403, "Access denied"),
-	RESOURCE_ALREADY_EXISTS(400, "Resource already exists");
+	RESOURCE_ALREADY_EXISTS(400, "Resource already exists"),
+
+	TOKEN_NOT_FOUND(404, "token not found");
 
 	private final Integer code;
 	private final String message;

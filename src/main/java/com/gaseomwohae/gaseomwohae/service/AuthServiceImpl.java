@@ -2,6 +2,7 @@ package com.gaseomwohae.gaseomwohae.service;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,8 @@ import com.gaseomwohae.gaseomwohae.dto.User;
 import com.gaseomwohae.gaseomwohae.dto.auth.LoginRequestDto;
 import com.gaseomwohae.gaseomwohae.repository.UserRepository;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -47,7 +50,27 @@ public class AuthServiceImpl implements AuthService {
 	}
 
 	@Override
-	public ResponseEntity<ResponseForm<Void>> refreshAccessToken(String refreshToken) {
-		return null;
+	public ResponseEntity<ResponseForm<Void>> refreshAccessToken(Long userId, HttpServletRequest request, HttpServletResponse response) {
+		// 리프레시 토큰 검증
+		String refreshToken = cookieUtil.extractRefreshToken(request).orElseThrow(() -> new BadRequestException(ErrorCode.TOKEN_NOT_FOUND));
+		jwtUtil.validateToken(refreshToken);
+
+		// 액세스 토큰 재발급
+		String accessToken = jwtUtil.createAccessToken(userId);
+		
+		return ResponseEntity.ok()
+			.header(HttpHeaders.SET_COOKIE, cookieUtil.createAccessToken(accessToken).toString())
+			.body(ResponseForm.success());
+	}
+
+	@Override
+	public ResponseEntity<ResponseForm<Void>> logout() {
+		
+		SecurityContextHolder.clearContext();
+		
+		return ResponseEntity.ok()
+			.header(HttpHeaders.SET_COOKIE, cookieUtil.deleteAccessToken().toString())
+			.header(HttpHeaders.SET_COOKIE, cookieUtil.deleteRefreshToken().toString())
+			.body(ResponseForm.success());
 	}
 }

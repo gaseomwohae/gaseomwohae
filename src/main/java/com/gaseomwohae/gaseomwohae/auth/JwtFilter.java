@@ -40,20 +40,34 @@ public class JwtFilter
 
 		try {
 			cookieUtil.extractAccessToken(request)
-				.ifPresent(token -> {
-					jwtUtil.validateToken(token);
-					Long userId = jwtUtil.getUserIdFromToken(token);
-					User user = userRepository.findById(userId);
-					if (user == null) {
-						throw new BadRequestException(ErrorCode.RESOURCE_NOT_FOUND);
-					}
-					UsernamePasswordAuthenticationToken authentication =
-						new UsernamePasswordAuthenticationToken(userId, null, null);
-					SecurityContextHolder.getContext().setAuthentication(authentication);
-				});
+				.ifPresentOrElse(
 
+					// 토큰이 있을때
+					token -> {
+						// 토큰 검증 (만료, 서버에서 발급했는지)
+						jwtUtil.validateToken(token);
+
+						// 유저 존재 여부 확인
+						Long userId = jwtUtil.getUserIdFromToken(token);
+						User user = userRepository.findById(userId);
+						if (user == null) {
+							throw new BadRequestException(ErrorCode.RESOURCE_NOT_FOUND);
+						}
+
+						// 유저 정보 저장
+						UsernamePasswordAuthenticationToken authentication =
+							new UsernamePasswordAuthenticationToken(userId, null, null);
+						SecurityContextHolder.getContext().setAuthentication(authentication);
+					},
+					// 토큰이 없을때
+					() -> {
+						throw new BadRequestException(ErrorCode.TOKEN_NOT_FOUND);
+					}
+				);
 			filterChain.doFilter(request, response);
-		} catch (CustomException e) {
+		}
+		// 필터단에서 발생하는 에러를 처리함 (예외처리)
+		catch (CustomException e) {
 			SecurityContextHolder.clearContext();
 			response.setContentType("application/json");
 			response.setStatus(e.getCode());
@@ -65,7 +79,7 @@ public class JwtFilter
 
 	@Override
 	protected boolean shouldNotFilter(HttpServletRequest request) {
-		String[] excludePath = {"/api/auth/login"};
+		String[] excludePath = {"/api/auth/login", "/api/user/signup"};
 		String path = request.getRequestURI();
 		return Arrays.stream(excludePath).anyMatch(path::startsWith);
 	}
