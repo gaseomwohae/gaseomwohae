@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gaseomwohae.gaseomwohae.repository.TravelRepository">
+    <select id="findAll" resultType="Travel">
+        SELECT * FROM travel WHERE deleted_at IS NULL
+    </select>
+
+    <select id="findById" parameterType="Long" resultType="Travel">
+        SELECT * FROM travel WHERE id = #{id} AND deleted_at IS NULL
+    </select>
+
+    <insert id="insert" parameterType="Travel" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO travel (name, destination, start_date, end_date)
+        VALUES (#{name}, #{destination}, #{startDate}, #{endDate})
+    </insert>
+
+    <update id="update" parameterType="Travel">
+        UPDATE travel
+        SET name = #{name},
+        destination = #{destination},
+        start_date = #{startDate},
+        end_date = #{endDate},
+        updated_at = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="Long">
+        UPDATE travel
+        SET deleted_at = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    </delete>
+</mapper> 

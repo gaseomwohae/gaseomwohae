@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gaseomwohae.gaseomwohae.repository.ReviewRepository">
+    <select id="findAll" resultType="Review">
+        SELECT * FROM review WHERE deleted_at IS NULL
+    </select>
+
+    <select id="findById" parameterType="Long" resultType="Review">
+        SELECT * FROM review WHERE id = #{id} AND deleted_at IS NULL
+    </select>
+
+    <select id="findByUserId" parameterType="Long" resultType="Review">
+        SELECT * FROM review WHERE user_id = #{userId} AND deleted_at IS NULL
+    </select>
+
+    <select id="findByPlaceId" parameterType="Long" resultType="Review">
+        SELECT * FROM review WHERE place_id = #{placeId} AND deleted_at IS NULL
+    </select>
+
+    <insert id="insert" parameterType="Review" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO review (user_id, place_id, rating, content, image)
+        VALUES (#{userId}, #{placeId}, #{rating}, #{content}, #{image})
+    </insert>
+
+    <update id="update" parameterType="Review">
+        UPDATE review
+        SET rating = #{rating},
+        content = #{content},
+        image = #{image},
+        updated_at = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="Long">
+        UPDATE review
+        SET deleted_at = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    </delete>
+</mapper> 

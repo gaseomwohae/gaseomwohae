@@ -40,7 +40,9 @@ public class UserServiceImpl implements UserService {
 		return GetUserInfoResponseDto.builder()
 			.name(user.getName())
 			.email(user.getEmail())
-			.profileImage(user.getProfileImage()).build();
+			.profileImage(user.getProfileImage())
+			.createdAt(user.getCreatedAt())
+			.build();
 	}
 
 }
