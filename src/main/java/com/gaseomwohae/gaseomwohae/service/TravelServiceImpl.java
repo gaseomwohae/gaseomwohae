@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.gaseomwohae.gaseomwohae.common.exception.ErrorCode;
 import com.gaseomwohae.gaseomwohae.common.exception.exceptions.BadRequestException;
+import com.gaseomwohae.gaseomwohae.dto.Invite;
 import com.gaseomwohae.gaseomwohae.dto.Participant;
 import com.gaseomwohae.gaseomwohae.dto.Schedule;
 import com.gaseomwohae.gaseomwohae.dto.Travel;
@@ -16,6 +17,7 @@ import com.gaseomwohae.gaseomwohae.dto.travel.CreateTravelRequestDto;
 import com.gaseomwohae.gaseomwohae.dto.travel.InviteParticipantRequestDto;
 import com.gaseomwohae.gaseomwohae.dto.travel.TravelDetailResponseDto;
 import com.gaseomwohae.gaseomwohae.dto.travel.UpdateTravelRequestDto;
+import com.gaseomwohae.gaseomwohae.repository.InviteRepository;
 import com.gaseomwohae.gaseomwohae.repository.ParticipantRepository;
 import com.gaseomwohae.gaseomwohae.repository.ScheduleRepository;
 import com.gaseomwohae.gaseomwohae.repository.TravelRepository;
@@ -30,6 +32,8 @@ public class TravelServiceImpl implements TravelService {
 	private final ParticipantRepository participantRepository;
 	private final ScheduleRepository scheduleRepository;
 	private final UserRepository userRepository;
+	private final InviteRepository inviteRepository;	
+
 	@Override
 	public TravelDetailResponseDto getTravel(Long userId, Long travelId) {
 		Travel travel = travelRepository.findById(travelId);
@@ -130,6 +134,12 @@ public class TravelServiceImpl implements TravelService {
 
 	@Override
 	public void inviteParticipant(Long userId, InviteParticipantRequestDto inviteParticipantRequestDto) {
+		
+		User invitedUser = userRepository.findByEmail(inviteParticipantRequestDto.getEmail());
+		if (invitedUser == null) {
+			throw new BadRequestException(ErrorCode.RESOURCE_NOT_FOUND);
+		}
+
 		Travel travel = travelRepository.findById(inviteParticipantRequestDto.getTravelId());
 		if (travel == null) {
 			throw new BadRequestException(ErrorCode.RESOURCE_NOT_FOUND);
@@ -141,24 +151,61 @@ public class TravelServiceImpl implements TravelService {
 			throw new BadRequestException(ErrorCode.ACCESS_DENIED);
 		}
 
-		// 초대할 사람이 같은 여행에 참여중인지 확인
-		Participant inviteParticipant = participantRepository.findByTravelIdAndUserId(inviteParticipantRequestDto.getTravelId(), inviteParticipantRequestDto.getUserId());
+		// 초대할 사람이 이미 여행에 참여중인지 확인
+		Participant inviteParticipant = participantRepository.findByTravelIdAndUserId(inviteParticipantRequestDto.getTravelId(), invitedUser.getId());
 		if (inviteParticipant != null) {
 			throw new BadRequestException(ErrorCode.RESOURCE_ALREADY_EXISTS);
 		}
 
-		// 초대할 사람의 대상 유저 찾기
-		User user = userRepository.findById(inviteParticipantRequestDto.getUserId());
-		if (user == null) {
+		// 초대하기
+		inviteRepository.insert(Invite.builder()
+			.inviterUserId(userId)
+			.invitedUserId(invitedUser.getId())
+			.travelId(inviteParticipantRequestDto.getTravelId())
+			.build()
+		);
+	}
+
+	@Override
+	public List<Invite> getInviteList(Long userId) {
+		return inviteRepository.findManyByInvitedUserId(userId);
+	}
+
+	@Override
+	public void acceptInvite(Long userId, Long inviteId) {
+		Invite invite = inviteRepository.findById(inviteId);
+		if (invite == null) {
 			throw new BadRequestException(ErrorCode.RESOURCE_NOT_FOUND);
 		}
 
-		// 대상 유저를 여행에 초대
+		if (!invite.getInvitedUserId().equals(userId)) {
+			throw new BadRequestException(ErrorCode.ACCESS_DENIED);
+		}
+
 		Participant newParticipant = Participant.builder()
-			.travelId(inviteParticipantRequestDto.getTravelId())
-			.userId(inviteParticipantRequestDto.getUserId())
+			.travelId(invite.getTravelId())
+			.userId(invite.getInvitedUserId())
 			.build();
 
 		participantRepository.insert(newParticipant);
+
+
+		// 초대 삭제
+		inviteRepository.delete(inviteId);
+	}
+
+	@Override
+	public void rejectInvite(Long userId, Long inviteId) {
+		Invite invite = inviteRepository.findById(inviteId);
+		if (invite == null) {
+			throw new BadRequestException(ErrorCode.RESOURCE_NOT_FOUND);
+		}
+
+		if (!invite.getInvitedUserId().equals(userId)) {
+			throw new BadRequestException(ErrorCode.ACCESS_DENIED);
+		}
+
+		// 초대 삭제
+		inviteRepository.delete(inviteId);
 	}
 }

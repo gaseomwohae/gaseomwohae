@@ -5,5 +5,5 @@ import lombok.Getter;
 @Getter
 public class InviteParticipantRequestDto {
     private Long travelId;
-    private Long userId;
+    private String email;
 }

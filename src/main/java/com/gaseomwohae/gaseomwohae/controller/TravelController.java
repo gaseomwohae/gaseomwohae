@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.gaseomwohae.gaseomwohae.dto.Invite;
 import com.gaseomwohae.gaseomwohae.dto.Travel;
 import com.gaseomwohae.gaseomwohae.dto.travel.CreateTravelRequestDto;
 import com.gaseomwohae.gaseomwohae.dto.travel.InviteParticipantRequestDto;
@@ -60,4 +61,18 @@ public class TravelController {
 		travelService.inviteParticipant(userId, inviteParticipantRequestDto);
 	}
 
+	@GetMapping("/invite")
+	public List<Invite> getInviteList(@AuthenticationPrincipal Long userId) {
+		return travelService.getInviteList(userId);
+	}
+
+	@PostMapping("/invite/accept/{invite-id}")
+	public void acceptInvite(@AuthenticationPrincipal Long userId, @PathVariable("invite-id") Long inviteId) {
+		travelService.acceptInvite(userId, inviteId);
+	}
+
+	@PostMapping("/invite/reject/{invite-id}")
+	public void rejectInvite(@AuthenticationPrincipal Long userId, @PathVariable("invite-id") Long inviteId) {
+		travelService.rejectInvite(userId, inviteId);
+	}
 }
