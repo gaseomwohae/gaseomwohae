@@ -21,6 +21,4 @@ public interface ReviewRepository {
 	void update(Review review);
 
 	void delete(Long id);
-
-	void softDelete(Long id);
 } 

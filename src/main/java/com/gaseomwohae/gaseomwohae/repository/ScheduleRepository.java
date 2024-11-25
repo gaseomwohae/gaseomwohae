@@ -19,6 +19,4 @@ public interface ScheduleRepository {
 	void update(Schedule schedule);
 
 	void delete(Long id);
-
-	void softDelete(Long id);
 } 

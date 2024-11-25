@@ -19,6 +19,4 @@ public interface UserRepository {
 	void update(User user);
 
 	void delete(Long id);
-
-	void softDelete(Long id);
 } 

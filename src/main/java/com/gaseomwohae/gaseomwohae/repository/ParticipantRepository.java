@@ -23,6 +23,4 @@ public interface ParticipantRepository {
 	void update(Participant participant);
 
 	void delete(Long id);
-
-	void softDelete(Long id);
 } 

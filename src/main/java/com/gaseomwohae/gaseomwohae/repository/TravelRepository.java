@@ -17,6 +17,4 @@ public interface TravelRepository {
 	void update(Travel travel);
 
 	void delete(Long id);
-
-	void softDelete(Long id);
 } 

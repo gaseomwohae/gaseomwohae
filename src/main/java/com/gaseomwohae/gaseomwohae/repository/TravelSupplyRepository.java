@@ -18,5 +18,4 @@ public interface TravelSupplyRepository {
     void insert(TravelSupply travelSupply);
 
     void delete(Long travelSupplyId);
-    
 }

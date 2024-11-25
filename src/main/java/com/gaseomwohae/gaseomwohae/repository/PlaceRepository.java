@@ -12,13 +12,9 @@ public interface PlaceRepository {
 
 	Place findById(Long id);
 
-	List<Place> findByCategory(String category);
-
 	void insert(Place place);
 
 	void update(Place place);
 
 	void delete(Long id);
-
-	void softDelete(Long id);
 } 
