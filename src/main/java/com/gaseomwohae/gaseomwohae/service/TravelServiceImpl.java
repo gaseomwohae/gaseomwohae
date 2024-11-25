@@ -17,6 +17,7 @@ import com.gaseomwohae.gaseomwohae.dto.travel.CreateTravelRequestDto;
 import com.gaseomwohae.gaseomwohae.dto.travel.InviteParticipantRequestDto;
 import com.gaseomwohae.gaseomwohae.dto.travel.TravelDetailResponseDto;
 import com.gaseomwohae.gaseomwohae.dto.travel.UpdateTravelRequestDto;
+import com.gaseomwohae.gaseomwohae.dto.user.GetUserInfoResponseDto;
 import com.gaseomwohae.gaseomwohae.repository.InviteRepository;
 import com.gaseomwohae.gaseomwohae.repository.ParticipantRepository;
 import com.gaseomwohae.gaseomwohae.repository.ScheduleRepository;
@@ -46,11 +47,26 @@ public class TravelServiceImpl implements TravelService {
 			throw new BadRequestException(ErrorCode.ACCESS_DENIED);
 		}
 
+		// 참여자 목록
+		List<GetUserInfoResponseDto> participants = new ArrayList<>();
+		participantList.forEach((participant -> {
+			User user = userRepository.findById(participant.getUserId());
+			if (user != null) {
+				participants.add(GetUserInfoResponseDto.builder()
+					.id(user.getId())
+					.name(user.getName())
+					.email(user.getEmail())
+					.profileImage(user.getProfileImage())
+					.createdAt(user.getCreatedAt())
+					.build());
+			}
+		}));
+
 		List<Schedule> scheduleList = scheduleRepository.findByTravelId(travelId);
 
 		return TravelDetailResponseDto.builder()
 			.travel(travel)
-			.participants(participantList)
+			.participants(participants)
 			.schedules(scheduleList)
 			.build();
 	}

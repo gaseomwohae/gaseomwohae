@@ -38,6 +38,7 @@ public class UserServiceImpl implements UserService {
 		User user = userRepository.findById(userId);
 
 		return GetUserInfoResponseDto.builder()
+			.id(user.getId())
 			.name(user.getName())
 			.email(user.getEmail())
 			.profileImage(user.getProfileImage())

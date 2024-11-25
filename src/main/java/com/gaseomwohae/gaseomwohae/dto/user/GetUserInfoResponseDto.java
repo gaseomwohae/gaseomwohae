@@ -10,6 +10,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class GetUserInfoResponseDto {
+	private Long id;
 	private String name;
 	private String email;
 	private String profileImage;
