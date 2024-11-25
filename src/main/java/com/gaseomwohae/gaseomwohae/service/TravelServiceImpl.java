@@ -10,6 +10,7 @@ import com.gaseomwohae.gaseomwohae.common.exception.ErrorCode;
 import com.gaseomwohae.gaseomwohae.common.exception.exceptions.BadRequestException;
 import com.gaseomwohae.gaseomwohae.dto.Invite;
 import com.gaseomwohae.gaseomwohae.dto.Participant;
+import com.gaseomwohae.gaseomwohae.dto.Place;
 import com.gaseomwohae.gaseomwohae.dto.Schedule;
 import com.gaseomwohae.gaseomwohae.dto.Travel;
 import com.gaseomwohae.gaseomwohae.dto.User;
@@ -20,6 +21,7 @@ import com.gaseomwohae.gaseomwohae.dto.travel.UpdateTravelRequestDto;
 import com.gaseomwohae.gaseomwohae.dto.user.GetUserInfoResponseDto;
 import com.gaseomwohae.gaseomwohae.repository.InviteRepository;
 import com.gaseomwohae.gaseomwohae.repository.ParticipantRepository;
+import com.gaseomwohae.gaseomwohae.repository.PlaceRepository;
 import com.gaseomwohae.gaseomwohae.repository.ScheduleRepository;
 import com.gaseomwohae.gaseomwohae.repository.TravelRepository;
 import com.gaseomwohae.gaseomwohae.repository.UserRepository;
@@ -34,6 +36,7 @@ public class TravelServiceImpl implements TravelService {
 	private final ScheduleRepository scheduleRepository;
 	private final UserRepository userRepository;
 	private final InviteRepository inviteRepository;	
+	private final PlaceRepository placeRepository;
 
 	@Override
 	public TravelDetailResponseDto getTravel(Long userId, Long travelId) {
@@ -62,12 +65,23 @@ public class TravelServiceImpl implements TravelService {
 			}
 		}));
 
+		// 일정 정보
 		List<Schedule> scheduleList = scheduleRepository.findByTravelId(travelId);
+
+		// 숙소 정보
+		List<Place> accommodations = new ArrayList<>();
+		scheduleList.forEach((schedule) -> {
+			Place place = placeRepository.findById(schedule.getPlaceId());
+			if (place != null && place.getCategory().contains("숙박")) {
+				accommodations.add(place);
+			}
+		});
 
 		return TravelDetailResponseDto.builder()
 			.travel(travel)
 			.participants(participants)
 			.schedules(scheduleList)
+			.accommodations(accommodations)
 			.build();
 	}
 
