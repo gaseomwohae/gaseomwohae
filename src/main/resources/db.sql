@@ -101,17 +101,20 @@ CREATE TABLE region (
 );
 
 
-CREATE TABLE `supplies` (
+CREATE TABLE `supply` (
     `id` INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
     `name` VARCHAR(255) NOT NULL,
     `image` VARCHAR(500) NOT NULL,
     `category` VARCHAR(50) NOT NULL
 );
 
-CREATE TABLE `travel_supplies` (
+CREATE TABLE `travel_supply` (
     `id` INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
     `travel_id` INT NOT NULL,
-    `supplies_id` INT NOT NULL
+    `supply_id` INT NOT NULL,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `deleted_at` TIMESTAMP NULL DEFAULT NULL
 );
 
 
@@ -438,7 +441,7 @@ INSERT INTO region (city, district, x, y) VALUES
 
 
 -- REQUIRED 카테고리 데이터 삽입
-INSERT INTO supplies (name, image, category) VALUES
+INSERT INTO supply (name, image, category) VALUES
 ('여권', '/src/assets/icons/supplies/requiredSupplies/passport.png', 'REQUIRED'),
 ('비자', '/src/assets/icons/supplies/requiredSupplies/visa.png', 'REQUIRED'),
 ('여권용 증명사진', '/src/assets/icons/supplies/requiredSupplies/photo.png', 'REQUIRED'),
@@ -453,7 +456,7 @@ INSERT INTO supplies (name, image, category) VALUES
 
 
 -- ELECTRONIC 카테고리 데이터 삽입
-INSERT INTO supplies (name, image, category) VALUES
+INSERT INTO supply (name, image, category) VALUES
 ('노트북', '/src/assets/icons/supplies/electronicSupplies/laptop.png', 'ELECTRONIC'),
 ('카메라', '/src/assets/icons/supplies/electronicSupplies/camera.png', 'ELECTRONIC'),
 ('카메라 충전기', '/src/assets/icons/supplies/electronicSupplies/charger.png', 'ELECTRONIC'),
@@ -472,7 +475,7 @@ INSERT INTO supplies (name, image, category) VALUES
 
 
 -- BEAUTY 카테고리 데이터 삽입
-INSERT INTO supplies (name, image, category) VALUES
+INSERT INTO supply (name, image, category) VALUES
 ('스킨 로션', '/src/assets/icons/supplies/beautySupplies/lotion.png', 'BEAUTY'),
 ('자외선 차단제', '/src/assets/icons/supplies/beautySupplies/sun-cream.png', 'BEAUTY'),
 ('화장품', '/src/assets/icons/supplies/beautySupplies/cosmetics.png', 'BEAUTY'),
@@ -488,7 +491,7 @@ INSERT INTO supplies (name, image, category) VALUES
 ('면도기', '/src/assets/icons/supplies/beautySupplies/shaver.png', 'BEAUTY');
 
 -- ETC 카테고리 데이터 삽입
-INSERT INTO supplies (name, image, category) VALUES
+INSERT INTO supply (name, image, category) VALUES
 ('수영복', '/src/assets/icons/supplies/etcSupplies/swimsuit.png', 'ETC'),
 ('물안경', '/src/assets/icons/supplies/etcSupplies/swimming-glasses.png', 'ETC'),
 ('튜브', '/src/assets/icons/supplies/etcSupplies/tube.png', 'ETC'),
@@ -500,7 +503,7 @@ INSERT INTO supplies (name, image, category) VALUES
 ('물티슈', '/src/assets/icons/supplies/etcSupplies/wet-wipes.png', 'ETC');
 
 -- CLOTHES 카테고리 데이터 삽입
-INSERT INTO supplies (name, image, category) VALUES
+INSERT INTO supply (name, image, category) VALUES
 ('옷', '/src/assets/icons/supplies/clothesSupplies/clothes.png', 'CLOTHES'),
 ('속옷', '/src/assets/icons/supplies/clothesSupplies/underwear.png', 'CLOTHES'),
 ('잠옷', '/src/assets/icons/supplies/clothesSupplies/pajamas.png', 'CLOTHES'),
@@ -511,7 +514,7 @@ INSERT INTO supplies (name, image, category) VALUES
 ('슬리퍼', '/src/assets/icons/supplies/clothesSupplies/slippers.png', 'CLOTHES');
 
 -- EMERGENCY 카테고리 데이터 삽입
-INSERT INTO supplies (name, image, category) VALUES
+INSERT INTO supply (name, image, category) VALUES
 ('비타민', '/src/assets/icons/supplies/emergencySupplies/vitamins.png', 'EMERGENCY'),
 ('소화제', '/src/assets/icons/supplies/emergencySupplies/medicine.png', 'EMERGENCY'),
 ('지사제', '/src/assets/icons/supplies/emergencySupplies/medicine.png', 'EMERGENCY'),

@@ -1,127 +1,6 @@
-DROP DATABASE IF EXISTS `gaseomwohae`;
-CREATE DATABASE `gaseomwohae`;
-USE `gaseomwohae`;
-
-CREATE TABLE `user` (
-    `id` BIGINT NOT NULL AUTO_INCREMENT,
-    `name` VARCHAR(50) NOT NULL,
-    `email` VARCHAR(50) NOT NULL UNIQUE,
-    `password` VARCHAR(255) NOT NULL,
-    `profile_image` VARCHAR(500) NOT NULL,
-    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `deleted_at` TIMESTAMP NULL DEFAULT NULL,
-    PRIMARY KEY (`id`)
-);
-
-CREATE TABLE `travel` (
-    `id` BIGINT NOT NULL AUTO_INCREMENT,
-    `name` VARCHAR(50) NOT NULL,
-    `destination` VARCHAR(100) NOT NULL,
-    `start_date` DATE NOT NULL,
-    `end_date` DATE NOT NULL,
-    `budget` INT NOT NULL DEFAULT 0,
-    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `deleted_at` TIMESTAMP NULL DEFAULT NULL,
-    PRIMARY KEY (`id`)
-);
-
-CREATE TABLE `schedule` (
-    `id` BIGINT NOT NULL AUTO_INCREMENT,
-    `travel_id` BIGINT NOT NULL,
-    `place_id` BIGINT NOT NULL,
-    `date` DATE NOT NULL,
-    `start_time` TIME NOT NULL,
-    `end_time` TIME NOT NULL,
-    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `deleted_at` TIMESTAMP NULL DEFAULT NULL,
-    PRIMARY KEY (`id`),
-    CHECK (`start_time` < `end_time`)
-);
-
-CREATE TABLE `place` (
-    `id` BIGINT NOT NULL AUTO_INCREMENT,
-    `name` VARCHAR(100) NOT NULL,
-    `category` VARCHAR(100) NOT NULL,
-    `address` VARCHAR(100) NOT NULL,
-    `road_address` VARCHAR(100) NOT NULL,
-    `thumbnail` VARCHAR(500) NULL,
-    `phone` VARCHAR(15) NULL,
-    `url` VARCHAR(500) NULL,
-    `x` DECIMAL(9, 6) NOT NULL,
-    `y` DECIMAL(9, 6) NOT NULL,
-    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `deleted_at` TIMESTAMP NULL DEFAULT NULL,
-    PRIMARY KEY (`id`)
-);
-
-CREATE TABLE `review` (
-    `id` BIGINT NOT NULL AUTO_INCREMENT,
-    `user_id` BIGINT NOT NULL,
-    `place_id` BIGINT NOT NULL,
-    `rating` TINYINT NOT NULL,
-    `content` TEXT NOT NULL,
-    `image` VARCHAR(500) NULL,
-    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `deleted_at` TIMESTAMP NULL DEFAULT NULL,
-    PRIMARY KEY (`id`)
-);
-
-CREATE TABLE `invite` (
-    `id` BIGINT NOT NULL AUTO_INCREMENT,
-    `inviter_user_id` BIGINT NOT NULL,
-    `invited_user_id` BIGINT NOT NULL,
-    `travel_id` BIGINT NOT NULL,
-    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `deleted_at` TIMESTAMP NULL DEFAULT NULL,
-    PRIMARY KEY (`id`)
-);
-
-CREATE TABLE `participant` (
-    `id` BIGINT NOT NULL AUTO_INCREMENT,
-    `user_id` BIGINT NOT NULL,
-    `travel_id` BIGINT NOT NULL,
-    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `deleted_at` TIMESTAMP NULL DEFAULT NULL,
-    PRIMARY KEY (`id`)
-);
-
-CREATE TABLE region (
-    `id` INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
-    `city` VARCHAR(255),                  -- 시/도 (예: 서울특별시)
-    `district` VARCHAR(255),              -- 구/군 (예: 종로구)
-    `x` DECIMAL(9, 6),             -- 경도 
-    `y` DECIMAL(9, 6)             -- 위도
-);
-
-
-CREATE TABLE `supply` (
-    `id` INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
-    `name` VARCHAR(255) NOT NULL,
-    `image` VARCHAR(500) NOT NULL,
-    `category` VARCHAR(50) NOT NULL
-);
-
-CREATE TABLE `travel_supply` (
-    `id` INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
-    `travel_id` INT NOT NULL,
-    `supply_id` INT NOT NULL,
-    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `deleted_at` TIMESTAMP NULL DEFAULT NULL
-);
-
-
-
 INSERT INTO `user` (name, email, password, profile_image) VALUES
-('최민주', 'mj@test.com', '$2a$10$eqFTXXeZxDrV5JTRgATrjuPMNgErTVo8F4.Du3GSsbsS6pQBwlL.y', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbQ8xRzthg_qgouk4QtfwcrE-VRPV3uwrX7w&s'),
-('김정현', 'jh@test.com', '$2a$10$eqFTXXeZxDrV5JTRgATrjuPMNgErTVo8F4.Du3GSsbsS6pQBwlL.y', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpCeJsxIfIaL178Ees1C1-Q-WiZwSMVS3WhQ&s');
+('최민주', 'mj@test.com', '$10$LgIpd9SumLGJ7LlmseGYLO8i.oDrtPTcslT2LDDWWa6XX4pY0OXBC', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbQ8xRzthg_qgouk4QtfwcrE-VRPV3uwrX7w&s')
+('김정현', 'jh@test.com', '$10$LgIpd9SumLGJ7LlmseGYLO8i.oDrtPTcslT2LDDWWa6XX4pY0OXBC', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpCeJsxIfIaL178Ees1C1-Q-WiZwSMVS3WhQ&s');
 
 
 INSERT INTO `travel` (name, destination, start_date, end_date, budget) VALUES
@@ -130,21 +9,21 @@ INSERT INTO `travel` (name, destination, start_date, end_date, budget) VALUES
 
 INSERT INTO `participant` (user_id, travel_id) VALUES
 (1, 1),
-(2, 2);
+(2, 2),
 
 
-INSERT INTO `place` (name, thumbnail, category, address, road_address, phone, url, y, x) VALUES
+INSERT INTO `place` (name, thumbnail, category, address, road_address, phone, url, latitude, longitude) VALUES
 ('부산 해운대 해수욕장', 'https://search.pstatic.net/common/?src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20150831_219%2F1440992305953sjrCF_JPEG%2F157155537056075_0.jpg', '해수욕장', '부산광역시 해운대구', '부산광역시 해운대구 해운대해변로 100', '051-123-4567', 'https://www.haeundae.go.kr', 35.159520, 129.155640),
 ('서울 경복궁', 'https://search.pstatic.net/common/?src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20150831_251%2F1440997727845NDP0Y_JPEG%2F11571707_2.jpg', '고궁,궁', '서울특별시 종로구', '서울특별시 종로구 사직로 161', '02-12304567', 'https://www.gyeongbokgung.go.kr', 37.579883, 126.976945),
 ('조선호텔 웨스틴조선 부산', 'https://search.pstatic.net/common/?src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20230504_283%2F1683190831894in3WR_PNG%2F%25C1%25A6%25B8%25F1_%25BE%25F8%25C0%25BD.png', '숙박', '부산광역시 해운대구', '부산광역시 해운대구 해운대해변로 100', '051-123-4567', 'https://www.haeundae.go.kr', 35.159520, 129.155640),
 ('신라스테이 광화문', 'https://search.pstatic.net/common/?src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20221213_179%2F1670914401246SltDU_JPEG%2F%25C5%25A9%25B1%25E2%25BA%25AF%25C8%25AF%25B7%25CE%25BA%25F1_1.jpg', '숙박', '서울특별시 종로구', '서울특별시 종로구 사직로 161', '02-12304567', 'https://www.gyeongbokgung.go.kr', 37.579883, 126.976945);
 
 -- 리뷰 데이터 추가
-INSERT INTO `review` (user_id, place_id, rating, content, image, created_at) VALUES
-(1, 1, 5, '정말 멋진 장소였어요! 분위기도 좋고 서비스도 훌륭했어요.', 'https://search.pstatic.net/common/?src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20150831_219%2F1440992305953sjrCF_JPEG%2F157155537056075_0.jpg',NOW()),
-(1, 2, 4, '음식이 아주 맛있었고, 직원들이 친절했습니다. 다만, 기다리는 시간이 조금 길었어요.', 'https://search.pstatic.net/common/?src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20150831_251%2F1440997727845NDP0Y_JPEG%2F11571707_2.jpg', NOW()),
-(2, 3, 3, '위치는 좋지만, 시설이 조금 낡았습니다. 가격 대비 만족도가 낮았어요.', 'https://search.pstatic.net/common/?src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20230504_283%2F1683190831894in3WR_PNG%2F%25C1%25A6%25B8%25F1_%25BE%25F8%25C0%25BD.png', NOW()),
-(2, 4, 5, '여기서의 경험은 정말 기억에 남아요. 분위기와 음식 모두 최고였어요!', 'https://search.pstatic.net/common/?src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20221213_179%2F1670914401246SltDU_JPEG%2F%25C5%25A9%25B1%25E2%25BA%25AF%25C8%25AF%25B7%25CE%25BA%25F1_1.jpg', NOW());
+INSERT INTO `review` (user_id, place_id, rating, review_text, created_at) VALUES
+(1, 1, 5, '정말 멋진 장소였어요! 분위기도 좋고 서비스도 훌륭했어요.', NOW(), NOW()),
+(1, 2, 4, '음식이 아주 맛있었고, 직원들이 친절했습니다. 다만, 기다리는 시간이 조금 길었어요.', NOW(), NOW()),
+(2, 3, 3, '위치는 좋지만, 시설이 조금 낡았습니다. 가격 대비 만족도가 낮았어요.', NOW(), NOW()),
+(2, 1, 5, '여기서의 경험은 정말 기억에 남아요. 분위기와 음식 모두 최고였어요!', NOW(), NOW());
 
 
 
@@ -439,92 +318,3 @@ INSERT INTO region (city, district, x, y) VALUES
 ('제주도', '제주시', 126.5312, 33.4996),
 ('제주도', '서귀포시', 126.5093, 33.2479);
 
-
--- REQUIRED 카테고리 데이터 삽입
-INSERT INTO supply (name, image, category) VALUES
-('여권', '/src/assets/icons/supplies/requiredSupplies/passport.png', 'REQUIRED'),
-('비자', '/src/assets/icons/supplies/requiredSupplies/visa.png', 'REQUIRED'),
-('여권용 증명사진', '/src/assets/icons/supplies/requiredSupplies/photo.png', 'REQUIRED'),
-('항공티켓', '/src/assets/icons/supplies/requiredSupplies/ticket-flight.png', 'REQUIRED'),
-('공항리무진티켓', '/src/assets/icons/supplies/requiredSupplies/limousine.png', 'REQUIRED'),
-('호텔바우처', '/src/assets/icons/supplies/requiredSupplies/voucher.png', 'REQUIRED'),
-('결제용카드', '/src/assets/icons/supplies/requiredSupplies/credit-card.png', 'REQUIRED'),
-('국내운전면허증', '/src/assets/icons/supplies/requiredSupplies/driving-license.png', 'REQUIRED'),
-('국제운전면허증', '/src/assets/icons/supplies/requiredSupplies/driving-license.png', 'REQUIRED'),
-('여행자보험증', '/src/assets/icons/supplies/requiredSupplies/health-insurance.png', 'REQUIRED'),
-('유심', '/src/assets/icons/supplies/requiredSupplies/sim.png', 'REQUIRED');
-
-
--- ELECTRONIC 카테고리 데이터 삽입
-INSERT INTO supply (name, image, category) VALUES
-('노트북', '/src/assets/icons/supplies/electronicSupplies/laptop.png', 'ELECTRONIC'),
-('카메라', '/src/assets/icons/supplies/electronicSupplies/camera.png', 'ELECTRONIC'),
-('카메라 충전기', '/src/assets/icons/supplies/electronicSupplies/charger.png', 'ELECTRONIC'),
-('노트북 충전기', '/src/assets/icons/supplies/electronicSupplies/charger.png', 'ELECTRONIC'),
-('핸드폰 충전기', '/src/assets/icons/supplies/electronicSupplies/charger.png', 'ELECTRONIC'),
-('태블릿', '/src/assets/icons/supplies/electronicSupplies/tablet.png', 'ELECTRONIC'),
-('태블릿 충전기', '/src/assets/icons/supplies/electronicSupplies/charger.png', 'ELECTRONIC'),
-('워치', '/src/assets/icons/supplies/electronicSupplies/smart-watch.png', 'ELECTRONIC'),
-('워치 충전기', '/src/assets/icons/supplies/electronicSupplies/charger.png', 'ELECTRONIC'),
-('멀티어댑터', '/src/assets/icons/supplies/electronicSupplies/power-strip.png', 'ELECTRONIC'),
-('이어폰', '/src/assets/icons/supplies/electronicSupplies/earphones.png', 'ELECTRONIC'),
-('스피커', '/src/assets/icons/supplies/electronicSupplies/speaker.png', 'ELECTRONIC'),
-('드라이기', '/src/assets/icons/supplies/electronicSupplies/hair-dryer.png', 'ELECTRONIC'),
-('SD카드', '/src/assets/icons/supplies/electronicSupplies/sd-card.png', 'ELECTRONIC'),
-('셀카봉', '/src/assets/icons/supplies/electronicSupplies/selfie-stick.png', 'ELECTRONIC');
-
-
--- BEAUTY 카테고리 데이터 삽입
-INSERT INTO supply (name, image, category) VALUES
-('스킨 로션', '/src/assets/icons/supplies/beautySupplies/lotion.png', 'BEAUTY'),
-('자외선 차단제', '/src/assets/icons/supplies/beautySupplies/sun-cream.png', 'BEAUTY'),
-('화장품', '/src/assets/icons/supplies/beautySupplies/cosmetics.png', 'BEAUTY'),
-('헤어 에센스', '/src/assets/icons/supplies/beautySupplies/hair-conditioner.png', 'BEAUTY'),
-('롤', '/src/assets/icons/supplies/beautySupplies/hair-roll.png', 'BEAUTY'),
-('향수', '/src/assets/icons/supplies/beautySupplies/perfume.png', 'BEAUTY'),
-('화장솜 면봉', '/src/assets/icons/supplies/beautySupplies/cotton-buds.png', 'BEAUTY'),
-('렌즈 안경', '/src/assets/icons/supplies/beautySupplies/glasses.png', 'BEAUTY'),
-('샴푸 린스', '/src/assets/icons/supplies/beautySupplies/shampoo.png', 'BEAUTY'),
-('바디 워시', '/src/assets/icons/supplies/beautySupplies/body-wash.png', 'BEAUTY'),
-('칫솔 치약', '/src/assets/icons/supplies/beautySupplies/toothbrush.png', 'BEAUTY'),
-('클렌징', '/src/assets/icons/supplies/beautySupplies/cleansing.png', 'BEAUTY'),
-('면도기', '/src/assets/icons/supplies/beautySupplies/shaver.png', 'BEAUTY');
-
--- ETC 카테고리 데이터 삽입
-INSERT INTO supply (name, image, category) VALUES
-('수영복', '/src/assets/icons/supplies/etcSupplies/swimsuit.png', 'ETC'),
-('물안경', '/src/assets/icons/supplies/etcSupplies/swimming-glasses.png', 'ETC'),
-('튜브', '/src/assets/icons/supplies/etcSupplies/tube.png', 'ETC'),
-('지퍼백', '/src/assets/icons/supplies/etcSupplies/zip-bag.png', 'ETC'),
-('우산', '/src/assets/icons/supplies/etcSupplies/umbrella.png', 'ETC'),
-('간식', '/src/assets/icons/supplies/etcSupplies/snacks.png', 'ETC'),
-('컵라면', '/src/assets/icons/supplies/etcSupplies/noodles.png', 'ETC'),
-('손톱깍이', '/src/assets/icons/supplies/etcSupplies/nail-clipper.png', 'ETC'),
-('물티슈', '/src/assets/icons/supplies/etcSupplies/wet-wipes.png', 'ETC');
-
--- CLOTHES 카테고리 데이터 삽입
-INSERT INTO supply (name, image, category) VALUES
-('옷', '/src/assets/icons/supplies/clothesSupplies/clothes.png', 'CLOTHES'),
-('속옷', '/src/assets/icons/supplies/clothesSupplies/underwear.png', 'CLOTHES'),
-('잠옷', '/src/assets/icons/supplies/clothesSupplies/pajamas.png', 'CLOTHES'),
-('양말', '/src/assets/icons/supplies/clothesSupplies/socks.png', 'CLOTHES'),
-('선글라스', '/src/assets/icons/supplies/clothesSupplies/sun-glasses.png', 'CLOTHES'),
-('가방', '/src/assets/icons/supplies/clothesSupplies/bag.png', 'CLOTHES'),
-('모자', '/src/assets/icons/supplies/clothesSupplies/cap.png', 'CLOTHES'),
-('슬리퍼', '/src/assets/icons/supplies/clothesSupplies/slippers.png', 'CLOTHES');
-
--- EMERGENCY 카테고리 데이터 삽입
-INSERT INTO supply (name, image, category) VALUES
-('비타민', '/src/assets/icons/supplies/emergencySupplies/vitamins.png', 'EMERGENCY'),
-('소화제', '/src/assets/icons/supplies/emergencySupplies/medicine.png', 'EMERGENCY'),
-('지사제', '/src/assets/icons/supplies/emergencySupplies/medicine.png', 'EMERGENCY'),
-('소염제', '/src/assets/icons/supplies/emergencySupplies/medicine.png', 'EMERGENCY'),
-('종합 감기약', '/src/assets/icons/supplies/emergencySupplies/medicine.png', 'EMERGENCY'),
-('진통제', '/src/assets/icons/supplies/emergencySupplies/medicine.png', 'EMERGENCY'),
-('멀미약', '/src/assets/icons/supplies/emergencySupplies/medicine.png', 'EMERGENCY'),
-('밴드', '/src/assets/icons/supplies/emergencySupplies/band.png', 'EMERGENCY'),
-('손 세정제', '/src/assets/icons/supplies/emergencySupplies/sanitizer.png', 'EMERGENCY');
-
-
-select * from user;
-commit;

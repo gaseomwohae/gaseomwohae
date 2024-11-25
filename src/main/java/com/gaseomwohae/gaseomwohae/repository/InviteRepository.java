@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.gaseomwohae.gaseomwohae.dto.Invite;
+import com.gaseomwohae.gaseomwohae.model.Invite;
 
 @Mapper
 public interface InviteRepository {

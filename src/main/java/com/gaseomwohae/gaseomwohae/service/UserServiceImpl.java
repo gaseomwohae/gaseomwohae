@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.gaseomwohae.gaseomwohae.common.exception.ErrorCode;
 import com.gaseomwohae.gaseomwohae.common.exception.exceptions.BadRequestException;
-import com.gaseomwohae.gaseomwohae.dto.User;
+import com.gaseomwohae.gaseomwohae.model.User;
 import com.gaseomwohae.gaseomwohae.dto.user.GetUserInfoResponseDto;
 import com.gaseomwohae.gaseomwohae.dto.user.SignUpRequestDto;
 import com.gaseomwohae.gaseomwohae.repository.UserRepository;

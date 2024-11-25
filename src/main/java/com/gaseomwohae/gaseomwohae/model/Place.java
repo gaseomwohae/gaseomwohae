@@ -1,4 +1,4 @@
-package com.gaseomwohae.gaseomwohae.dto;
+package com.gaseomwohae.gaseomwohae.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

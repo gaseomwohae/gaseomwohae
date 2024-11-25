@@ -13,7 +13,7 @@ import com.gaseomwohae.gaseomwohae.common.exception.ErrorCode;
 import com.gaseomwohae.gaseomwohae.common.exception.exceptions.BadRequestException;
 import com.gaseomwohae.gaseomwohae.common.exception.exceptions.CustomException;
 import com.gaseomwohae.gaseomwohae.common.response.ResponseForm;
-import com.gaseomwohae.gaseomwohae.dto.User;
+import com.gaseomwohae.gaseomwohae.model.User;
 import com.gaseomwohae.gaseomwohae.repository.UserRepository;
 
 import jakarta.servlet.FilterChain;

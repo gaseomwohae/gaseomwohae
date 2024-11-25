@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.gaseomwohae.gaseomwohae.dto.Participant;
+import com.gaseomwohae.gaseomwohae.model.Participant;
 
 @Mapper
 public interface ParticipantRepository {

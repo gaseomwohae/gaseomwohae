@@ -1,6 +1,7 @@
 package com.gaseomwohae.gaseomwohae.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,12 +13,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.gaseomwohae.gaseomwohae.dto.Travel;
+import com.gaseomwohae.gaseomwohae.dto.travel.AddSupplyRequestDto;
 import com.gaseomwohae.gaseomwohae.dto.travel.CreateTravelRequestDto;
+import com.gaseomwohae.gaseomwohae.dto.travel.DeleteSupplyRequestDto;
 import com.gaseomwohae.gaseomwohae.dto.travel.InviteListResponseDto;
 import com.gaseomwohae.gaseomwohae.dto.travel.InviteParticipantRequestDto;
 import com.gaseomwohae.gaseomwohae.dto.travel.TravelDetailResponseDto;
 import com.gaseomwohae.gaseomwohae.dto.travel.UpdateTravelRequestDto;
+import com.gaseomwohae.gaseomwohae.model.Supply;
+import com.gaseomwohae.gaseomwohae.model.Travel;
 import com.gaseomwohae.gaseomwohae.service.TravelService;
 
 import jakarta.validation.Valid;
@@ -74,5 +78,20 @@ public class TravelController {
 	@PostMapping("/invite/reject/{invite-id}")
 	public void rejectInvite(@AuthenticationPrincipal Long userId, @PathVariable("invite-id") Long inviteId) {
 		travelService.rejectInvite(userId, inviteId);
+	}
+
+	@GetMapping("/supply")
+	public Map<String, List<Supply>> getSupplyList(@AuthenticationPrincipal Long userId) {
+		return travelService.getSupplyList(userId);
+	}
+	
+	@PostMapping("/supply")
+	public void addSupply(@AuthenticationPrincipal Long userId, @RequestBody AddSupplyRequestDto addSupplyRequestDto) {
+		travelService.addSupply(userId, addSupplyRequestDto);
+	}
+
+	@DeleteMapping("/supply")
+	public void deleteSupply(@AuthenticationPrincipal Long userId, @RequestBody DeleteSupplyRequestDto deleteSupplyRequestDto) {
+		travelService.deleteSupply(userId, deleteSupplyRequestDto);
 	}
 }

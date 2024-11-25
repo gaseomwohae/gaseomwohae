@@ -1,30 +1,38 @@
 package com.gaseomwohae.gaseomwohae.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gaseomwohae.gaseomwohae.common.exception.ErrorCode;
 import com.gaseomwohae.gaseomwohae.common.exception.exceptions.BadRequestException;
-import com.gaseomwohae.gaseomwohae.dto.Invite;
-import com.gaseomwohae.gaseomwohae.dto.Participant;
-import com.gaseomwohae.gaseomwohae.dto.Place;
-import com.gaseomwohae.gaseomwohae.dto.Schedule;
-import com.gaseomwohae.gaseomwohae.dto.Travel;
-import com.gaseomwohae.gaseomwohae.dto.User;
+import com.gaseomwohae.gaseomwohae.dto.travel.AddSupplyRequestDto;
 import com.gaseomwohae.gaseomwohae.dto.travel.CreateTravelRequestDto;
+import com.gaseomwohae.gaseomwohae.dto.travel.DeleteSupplyRequestDto;
 import com.gaseomwohae.gaseomwohae.dto.travel.InviteListResponseDto;
 import com.gaseomwohae.gaseomwohae.dto.travel.InviteParticipantRequestDto;
 import com.gaseomwohae.gaseomwohae.dto.travel.TravelDetailResponseDto;
 import com.gaseomwohae.gaseomwohae.dto.travel.UpdateTravelRequestDto;
 import com.gaseomwohae.gaseomwohae.dto.user.GetUserInfoResponseDto;
+import com.gaseomwohae.gaseomwohae.model.Invite;
+import com.gaseomwohae.gaseomwohae.model.Participant;
+import com.gaseomwohae.gaseomwohae.model.Place;
+import com.gaseomwohae.gaseomwohae.model.Schedule;
+import com.gaseomwohae.gaseomwohae.model.Supply;
+import com.gaseomwohae.gaseomwohae.model.Travel;
+import com.gaseomwohae.gaseomwohae.model.TravelSupply;
+import com.gaseomwohae.gaseomwohae.model.User;
 import com.gaseomwohae.gaseomwohae.repository.InviteRepository;
 import com.gaseomwohae.gaseomwohae.repository.ParticipantRepository;
 import com.gaseomwohae.gaseomwohae.repository.PlaceRepository;
 import com.gaseomwohae.gaseomwohae.repository.ScheduleRepository;
+import com.gaseomwohae.gaseomwohae.repository.SupplyRepository;
 import com.gaseomwohae.gaseomwohae.repository.TravelRepository;
+import com.gaseomwohae.gaseomwohae.repository.TravelSupplyRepository;
 import com.gaseomwohae.gaseomwohae.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -38,6 +46,8 @@ public class TravelServiceImpl implements TravelService {
 	private final UserRepository userRepository;
 	private final InviteRepository inviteRepository;	
 	private final PlaceRepository placeRepository;
+	private final SupplyRepository supplyRepository;
+	private final TravelSupplyRepository travelSupplyRepository;
 
 	@Override
 	public TravelDetailResponseDto getTravel(Long userId, Long travelId) {
@@ -78,11 +88,26 @@ public class TravelServiceImpl implements TravelService {
 			}
 		});
 
+		// 여행 물품 목록
+		List<TravelSupply> travelSupplies = travelSupplyRepository.findAllByTravelId(travelId);
+		List<Supply> supplies = new ArrayList<>();
+		travelSupplies.forEach((travelSupply) -> {
+			supplies.add(supplyRepository.findById(travelSupply.getSupplyId()));
+		});
+
+		Map<String, List<Supply>> suppliesByCategory = new HashMap<>();
+		supplies.forEach((supply) -> {
+			suppliesByCategory
+				.computeIfAbsent(supply.getCategory(), k -> new ArrayList<>())
+				.add(supply);
+		});
+
 		return TravelDetailResponseDto.builder()
 			.travel(travel)
 			.participants(participants)
 			.schedules(scheduleList)
 			.accommodations(accommodations)
+			.supplies(suppliesByCategory)
 			.build();
 	}
 
@@ -266,5 +291,60 @@ public class TravelServiceImpl implements TravelService {
 
 		// 초대 삭제
 		inviteRepository.delete(inviteId);
+	}
+
+	@Override
+	public Map<String, List<Supply>> getSupplyList(Long userId) {
+		List<Supply> supplies = supplyRepository.findAll();
+		Map<String, List<Supply>> suppliesByCategory = new HashMap<>();
+
+		for (Supply supply : supplies) {
+			String category = supply.getCategory(); // Assuming Supply has a getCategory() method
+			suppliesByCategory
+				.computeIfAbsent(category, k -> new ArrayList<>())
+				.add(supply);
+		};
+
+		return suppliesByCategory;
+	}
+
+	@Override
+	public void addSupply(Long userId, AddSupplyRequestDto addSupplyRequestDto) {
+		Supply addSupply = supplyRepository.findById(addSupplyRequestDto.getSupplyId());
+		if (addSupply == null) {
+			throw new BadRequestException(ErrorCode.RESOURCE_NOT_FOUND);
+		}
+
+		Travel travel = travelRepository.findById(addSupplyRequestDto.getTravelId());
+		if (travel == null) {
+			throw new BadRequestException(ErrorCode.RESOURCE_NOT_FOUND);
+		}
+
+		TravelSupply newTravelSupply = TravelSupply.builder()
+			.travelId(addSupplyRequestDto.getTravelId())
+			.supplyId(addSupplyRequestDto.getSupplyId())
+			.build();
+
+		travelSupplyRepository.insert(newTravelSupply);
+	}
+
+	@Override
+	public void deleteSupply(Long userId, DeleteSupplyRequestDto deleteSupplyRequestDto) {
+		Supply supply = supplyRepository.findById(deleteSupplyRequestDto.getSupplyId());
+		if (supply == null) {
+			throw new BadRequestException(ErrorCode.RESOURCE_NOT_FOUND);
+		}
+
+		Travel travel = travelRepository.findById(deleteSupplyRequestDto.getTravelId());
+		if (travel == null) {
+			throw new BadRequestException(ErrorCode.RESOURCE_NOT_FOUND);
+		}
+
+		TravelSupply travelSupply = travelSupplyRepository.findByTravelIdAndSupplyId(deleteSupplyRequestDto.getTravelId(), deleteSupplyRequestDto.getSupplyId());
+		if (travelSupply == null) {
+			throw new BadRequestException(ErrorCode.RESOURCE_NOT_FOUND);
+		}
+
+		travelSupplyRepository.delete(travelSupply.getId());
 	}
 }

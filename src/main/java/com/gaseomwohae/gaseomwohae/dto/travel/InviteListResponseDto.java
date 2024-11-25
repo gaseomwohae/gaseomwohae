@@ -2,7 +2,7 @@ package com.gaseomwohae.gaseomwohae.dto.travel;
 
 import java.time.LocalDateTime;
 
-import com.gaseomwohae.gaseomwohae.dto.Travel;
+import com.gaseomwohae.gaseomwohae.model.Travel;
 import com.gaseomwohae.gaseomwohae.dto.user.GetUserInfoResponseDto;
 
 import lombok.AllArgsConstructor;

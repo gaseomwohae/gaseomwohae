@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.gaseomwohae.gaseomwohae.dto.Schedule;
+import com.gaseomwohae.gaseomwohae.model.Schedule;
 
 @Mapper
 public interface ScheduleRepository {

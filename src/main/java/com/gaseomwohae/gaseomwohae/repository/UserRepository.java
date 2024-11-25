@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.gaseomwohae.gaseomwohae.dto.User;
+import com.gaseomwohae.gaseomwohae.model.User;
 
 @Mapper
 public interface UserRepository {

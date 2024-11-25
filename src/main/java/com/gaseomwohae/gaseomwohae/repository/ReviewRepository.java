@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.gaseomwohae.gaseomwohae.dto.Review;
+import com.gaseomwohae.gaseomwohae.model.Review;
 
 @Mapper
 public interface ReviewRepository {

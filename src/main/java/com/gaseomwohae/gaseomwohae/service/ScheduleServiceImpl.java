@@ -7,10 +7,10 @@ import org.springframework.stereotype.Service;
 
 import com.gaseomwohae.gaseomwohae.common.exception.ErrorCode;
 import com.gaseomwohae.gaseomwohae.common.exception.exceptions.BadRequestException;
-import com.gaseomwohae.gaseomwohae.dto.Participant;
-import com.gaseomwohae.gaseomwohae.dto.Place;
-import com.gaseomwohae.gaseomwohae.dto.Schedule;
-import com.gaseomwohae.gaseomwohae.dto.Travel;
+import com.gaseomwohae.gaseomwohae.model.Participant;
+import com.gaseomwohae.gaseomwohae.model.Place;
+import com.gaseomwohae.gaseomwohae.model.Schedule;
+import com.gaseomwohae.gaseomwohae.model.Travel;
 import com.gaseomwohae.gaseomwohae.dto.schedule.CreateScheduleRequestDto;
 import com.gaseomwohae.gaseomwohae.dto.schedule.UpdateScheduleRequestDto;
 import com.gaseomwohae.gaseomwohae.repository.ParticipantRepository;

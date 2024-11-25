@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gaseomwohae.gaseomwohae.repository.TravelSupplyRepository">
+
+    <select id="findManyById" resultType="TravelSupply">
+        SELECT * FROM travel_supply WHERE travel_id = #{travelId} AND deleted_at IS NULL
+    </select>
+
+    <select id="findByTravelIdAndSupplyId" resultType="TravelSupply">
+        SELECT * FROM travel_supply WHERE travel_id = #{travelId} AND supply_id = #{supplyId} AND deleted_at IS NULL
+    </select>
+
+    <select id="findAllByTravelId" resultType="TravelSupply">
+        SELECT * FROM travel_supply WHERE travel_id = #{travelId} AND deleted_at IS NULL
+    </select>
+
+    <insert id="insert" parameterType="TravelSupply">
+        INSERT INTO travel_supply (travel_id, supply_id) VALUES (#{travelId}, #{supplyId})
+    </insert>
+
+    <delete id="delete" parameterType="Long">
+        UPDATE travel_supply
+        SET deleted_at = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    </delete>
+
+</mapper>
