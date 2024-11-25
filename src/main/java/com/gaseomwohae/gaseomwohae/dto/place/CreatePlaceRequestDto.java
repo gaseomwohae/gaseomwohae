@@ -8,6 +8,8 @@ import lombok.Getter;
 
 @Getter
 public class CreatePlaceRequestDto {
+    @NotNull
+    private Long id;
     @NotBlank
 	private String name;
     @NotBlank

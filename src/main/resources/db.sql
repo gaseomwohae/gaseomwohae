@@ -522,8 +522,7 @@ INSERT INTO supply (name, image, category) VALUES
 ('종합 감기약', '/src/assets/icons/supplies/emergencySupplies/medicine.png', 'EMERGENCY'),
 ('진통제', '/src/assets/icons/supplies/emergencySupplies/medicine.png', 'EMERGENCY'),
 ('멀미약', '/src/assets/icons/supplies/emergencySupplies/medicine.png', 'EMERGENCY'),
-('밴드', '/src/assets/icons/supplies/emergencySupplies/band.png', 'EMERGENCY'),
-('손 세정제', '/src/assets/icons/supplies/emergencySupplies/sanitizer.png', 'EMERGENCY');
+('밴드', '/src/assets/icons/supplies/emergencySupplies/band.png', 'EMERGENCY');
 
 
 select * from user;

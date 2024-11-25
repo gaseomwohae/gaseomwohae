@@ -14,8 +14,8 @@
     </select>
 
     <insert id="insert" parameterType="Place" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO place (name, category, address, road_address, thumbnail, phone, url, x, y)
-        VALUES (#{name}, #{category}, #{address}, #{roadAddress}, #{thumbnail}, #{phone}, #{url}, #{x}, #{y})
+        INSERT INTO place (id, name, category, address, road_address, thumbnail, phone, url, x, y)
+        VALUES (#{id}, #{name}, #{category}, #{address}, #{roadAddress}, #{thumbnail}, #{phone}, #{url}, #{x}, #{y})
     </insert>
 
     <update id="update" parameterType="Place">
