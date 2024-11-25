@@ -1,12 +1,16 @@
 package com.gaseomwohae.gaseomwohae.controller;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gaseomwohae.gaseomwohae.dto.schedule.CreateScheduleRequestDto;
+import com.gaseomwohae.gaseomwohae.dto.schedule.UpdateScheduleRequestDto;
 import com.gaseomwohae.gaseomwohae.service.ScheduleService;
 
 import jakarta.validation.Valid;
@@ -21,6 +25,16 @@ public class ScheduleController {
     @PostMapping
     public void createSchedule(@AuthenticationPrincipal Long userId, @RequestBody @Valid CreateScheduleRequestDto createScheduleRequestDto) {
         scheduleService.createSchedule(userId, createScheduleRequestDto);
+    }
+
+    @PutMapping("/{schedule-id}")
+    public void updateSchedule(@AuthenticationPrincipal Long userId, @PathVariable("schedule-id") Long scheduleId, @RequestBody @Valid UpdateScheduleRequestDto updateScheduleRequestDto) {
+        scheduleService.updateSchedule(userId, scheduleId, updateScheduleRequestDto);
+    }
+
+    @DeleteMapping("/{schedule-id}")
+    public void deleteSchedule(@AuthenticationPrincipal Long userId, @PathVariable("schedule-id") Long scheduleId) {
+        scheduleService.deleteSchedule(userId, scheduleId);
     }
 
     

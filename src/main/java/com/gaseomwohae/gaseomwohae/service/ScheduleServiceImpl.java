@@ -12,6 +12,7 @@ import com.gaseomwohae.gaseomwohae.dto.Place;
 import com.gaseomwohae.gaseomwohae.dto.Schedule;
 import com.gaseomwohae.gaseomwohae.dto.Travel;
 import com.gaseomwohae.gaseomwohae.dto.schedule.CreateScheduleRequestDto;
+import com.gaseomwohae.gaseomwohae.dto.schedule.UpdateScheduleRequestDto;
 import com.gaseomwohae.gaseomwohae.repository.ParticipantRepository;
 import com.gaseomwohae.gaseomwohae.repository.PlaceRepository;
 import com.gaseomwohae.gaseomwohae.repository.ScheduleRepository;
@@ -52,12 +53,12 @@ public class ScheduleServiceImpl implements ScheduleService {
 		// 일정 겹치는지 체크
 		List<Schedule> scheduleList = scheduleRepository.findByTravelId(createScheduleRequestDto.getTravelId());
 
-		boolean hasOverlap = scheduleList.stream()
+		boolean isOverlap = scheduleList.stream()
 			.filter(schedule -> schedule.getDate().equals(createScheduleRequestDto.getDate()))
 			.anyMatch(schedule -> checkOverlap(schedule.getStartTime(), schedule.getEndTime(),
 				createScheduleRequestDto.getStartTime(), createScheduleRequestDto.getEndTime()));
 		
-		if (hasOverlap) {
+		if (isOverlap) {
 			throw new BadRequestException(ErrorCode.INVALID_INPUT);
 		}
 
@@ -76,6 +77,71 @@ public class ScheduleServiceImpl implements ScheduleService {
 			.build();
 
 		scheduleRepository.insert(schedule);
+	}
+
+	@Override
+	public void updateSchedule(Long userId, Long scheduleId, UpdateScheduleRequestDto updateScheduleRequestDto) {
+		LocalTime startTime = updateScheduleRequestDto.getStartTime();
+		LocalTime endTime = updateScheduleRequestDto.getEndTime();
+
+		// 일정 존재 체크
+		Schedule schedule = scheduleRepository.findById(scheduleId);
+		if (schedule == null) {
+			throw new BadRequestException(ErrorCode.RESOURCE_NOT_FOUND);
+		}
+
+		// 여행 참여자인지 체크
+		Participant participant = participantRepository.findByTravelIdAndUserId(schedule.getTravelId(), userId);
+		if (participant == null) {
+			throw new BadRequestException(ErrorCode.ACCESS_DENIED);
+		}
+
+		// 30분 간격인지 체크
+		if (!checkInterval(startTime, endTime)) {
+			throw new BadRequestException(ErrorCode.INVALID_INPUT);
+		}
+
+		// 일정 겹치는지 체크
+		List<Schedule> scheduleList = scheduleRepository.findByTravelId(schedule.getTravelId());
+
+		boolean isOverlap = scheduleList.stream()
+			.filter(s -> s.getDate().equals(schedule.getDate()))
+			.anyMatch(s -> checkOverlap(s.getStartTime(), s.getEndTime(), startTime, endTime));
+
+		if (isOverlap) {
+			throw new BadRequestException(ErrorCode.INVALID_INPUT);
+		}
+
+	
+		Schedule updatedSchedule = Schedule.builder()
+			.id(scheduleId)
+			.date(schedule.getDate())
+			.placeId(schedule.getPlaceId())
+			.travelId(schedule.getTravelId())
+			.startTime(startTime)
+			.endTime(endTime)
+			.build();
+
+		scheduleRepository.update(updatedSchedule);
+
+	}
+
+	@Override
+	public void deleteSchedule(Long userId, Long scheduleId) {
+		
+		// 일정 존재 체크
+		Schedule schedule = scheduleRepository.findById(scheduleId);
+		if (schedule == null) {
+			throw new BadRequestException(ErrorCode.RESOURCE_NOT_FOUND);
+		}
+
+		// 여행 참여자인지 체크
+		Participant participant = participantRepository.findByTravelIdAndUserId(schedule.getTravelId(), userId);
+		if (participant == null) {
+			throw new BadRequestException(ErrorCode.ACCESS_DENIED);
+		}
+
+		scheduleRepository.delete(scheduleId);
 	}
 
 	// 일정이 겹치는지 체크
