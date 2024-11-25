@@ -16,6 +16,7 @@ public class Travel {
 	private String destination;
 	private LocalDate startDate;
 	private LocalDate endDate;
+	private Integer budget;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
 	private LocalDateTime deletedAt;

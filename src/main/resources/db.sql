@@ -1,11 +1,99 @@
+CREATE TABLE `user` (
+    `id` BIGINT NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(50) NOT NULL,
+    `email` VARCHAR(50) NOT NULL UNIQUE,
+    `password` VARCHAR(255) NOT NULL,
+    `profile_image` VARCHAR(500) NOT NULL,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `deleted_at` TIMESTAMP NULL DEFAULT NULL,
+    PRIMARY KEY (`id`)
+);
 
+CREATE TABLE `travel` (
+    `id` BIGINT NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(50) NOT NULL,
+    `destination` VARCHAR(100) NOT NULL,
+    `start_date` DATE NOT NULL,
+    `end_date` DATE NOT NULL,
+    `budget` INT NOT NULL DEFAULT 0,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `deleted_at` TIMESTAMP NULL DEFAULT NULL,
+    PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `schedule` (
+    `id` BIGINT NOT NULL AUTO_INCREMENT,
+    `travel_id` BIGINT NOT NULL,
+    `place_id` BIGINT NOT NULL,
+    `date` DATE NOT NULL,
+    `start_time` TIME NOT NULL,
+    `end_time` TIME NOT NULL,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `deleted_at` TIMESTAMP NULL DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    CHECK (`start_time` < `end_time`)
+);
+
+CREATE TABLE `place` (
+    `id` BIGINT NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(100) NOT NULL,
+    `category` VARCHAR(100) NOT NULL,
+    `address` VARCHAR(100) NOT NULL,
+    `road_address` VARCHAR(100) NOT NULL,
+    `thumbnail` VARCHAR(500) NULL,
+    `phone` VARCHAR(15) NULL,
+    `url` VARCHAR(500) NULL,
+    `x` DECIMAL(9, 6) NOT NULL,
+    `y` DECIMAL(9, 6) NOT NULL,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `deleted_at` TIMESTAMP NULL DEFAULT NULL,
+    PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `review` (
+    `id` BIGINT NOT NULL AUTO_INCREMENT,
+    `user_id` BIGINT NOT NULL,
+    `place_id` BIGINT NOT NULL,
+    `rating` TINYINT NOT NULL,
+    `content` TEXT NOT NULL,
+    `image` VARCHAR(500) NULL,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `deleted_at` TIMESTAMP NULL DEFAULT NULL,
+    PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `invite` (
+    `id` BIGINT NOT NULL AUTO_INCREMENT,
+    `inviter_user_id` BIGINT NOT NULL,
+    `invited_user_id` BIGINT NOT NULL,
+    `travel_id` BIGINT NOT NULL,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `deleted_at` TIMESTAMP NULL DEFAULT NULL,
+    PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `participant` (
+    `id` BIGINT NOT NULL AUTO_INCREMENT,
+    `user_id` BIGINT NOT NULL,
+    `travel_id` BIGINT NOT NULL,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `deleted_at` TIMESTAMP NULL DEFAULT NULL,
+    PRIMARY KEY (`id`)
+);
 
 CREATE TABLE region (
-    id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,  -- 고유 ID
+    id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
     city VARCHAR(255),                  -- 시/도 (예: 서울특별시)
     district VARCHAR(255),              -- 구/군 (예: 종로구)
-    x DECIMAL(9, 6),             -- 경도 (위도 값의 정확도를 위해 DECIMAL 사용, 9자리 숫자 중 6자리는 소수점)
-    y DECIMAL(9, 6)             -- 위도 (경도 값의 정확도를 위해 DECIMAL 사용, 9자리 숫자 중 6자리는 소수점)
+    x DECIMAL(9, 6),             -- 경도 
+    y DECIMAL(9, 6)             -- 위도
 );
 
 

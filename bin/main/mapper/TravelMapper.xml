@@ -10,8 +10,8 @@
     </select>
 
     <insert id="insert" parameterType="Travel" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO travel (name, destination, start_date, end_date)
-        VALUES (#{name}, #{destination}, #{startDate}, #{endDate})
+        INSERT INTO travel (name, destination, start_date, end_date, budget)
+        VALUES (#{name}, #{destination}, #{startDate}, #{endDate}, #{budget})
     </insert>
 
     <update id="update" parameterType="Travel">
@@ -20,6 +20,7 @@
         destination = #{destination},
         start_date = #{startDate},
         end_date = #{endDate},
+        budget = #{budget},
         updated_at = CURRENT_TIMESTAMP
         WHERE id = #{id}
     </update>

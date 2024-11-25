@@ -92,10 +92,10 @@ public class TravelServiceImpl implements TravelService {
 
 		Travel newTravel = Travel.builder()
 			.name(createTravelRequestDto.getName())
-			.destination(
-				createTravelRequestDto.getDestination())
+			.destination(createTravelRequestDto.getDestination())
 			.startDate(createTravelRequestDto.getStartDate())
 			.endDate(createTravelRequestDto.getEndDate())
+			.budget(createTravelRequestDto.getBudget())
 			.build();
 
 		travelRepository.insert(newTravel);
@@ -128,6 +128,8 @@ public class TravelServiceImpl implements TravelService {
 				updateTravelRequestDto.getStartDate())
 			.endDate(updateTravelRequestDto.getEndDate() == null ? travel.getEndDate() :
 				updateTravelRequestDto.getEndDate())
+			.budget(updateTravelRequestDto.getBudget() == null ? travel.getBudget() :
+				updateTravelRequestDto.getBudget())
 			.build();
 
 		travelRepository.update(updateTravel);
