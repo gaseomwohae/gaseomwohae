@@ -13,6 +13,7 @@ import com.gaseomwohae.gaseomwohae.common.exception.ErrorCode;
 import com.gaseomwohae.gaseomwohae.common.exception.exceptions.BadRequestException;
 import com.gaseomwohae.gaseomwohae.dto.region.LocationDto;
 import com.gaseomwohae.gaseomwohae.dto.schedule.ScheduleDetailResponseDto;
+import com.gaseomwohae.gaseomwohae.dto.schedule.ScheduleListResponseDto;
 import com.gaseomwohae.gaseomwohae.dto.travel.AddSupplyRequestDto;
 import com.gaseomwohae.gaseomwohae.dto.travel.CreateTravelRequestDto;
 import com.gaseomwohae.gaseomwohae.dto.travel.DeleteSupplyRequestDto;
@@ -113,22 +114,30 @@ public class TravelServiceImpl implements TravelService {
 
 		// 목적지의 날씨정보
 		String destination = travel.getDestination();
-		destination = "부산광역시 중구";
 		LocationDto location = regionRepository.getLocation(destination.split(" ")[0], destination.split(" ")[1]);
 
 		List<WeatherResponseDto> weatherInfo = apiService.getWeatherInfo(location.getY().doubleValue(), location.getX().doubleValue());
 
 
+		// 응답 데이터 생성
 		return TravelDetailResponseDto.builder()
 			.travel(travel)
 			.participants(participants)
-			.schedules(scheduleList.stream().map(schedule -> ScheduleDetailResponseDto.builder()
-				.scheduleId(schedule.getId())
-				.date(schedule.getDate())
-				.startTime(schedule.getStartTime())
-				.endTime(schedule.getEndTime())
-				.place(placeRepository.findById(schedule.getPlaceId()))
-				.build()).collect(Collectors.toList()))
+			.schedules(scheduleList.stream()
+			.collect(Collectors.groupingBy(Schedule::getDate))
+			.entrySet().stream()
+			.map(entry -> ScheduleListResponseDto.builder()
+				.date(entry.getKey())
+				.schedule(entry.getValue().stream()
+					.map(schedule -> ScheduleDetailResponseDto.builder()
+						.scheduleId(schedule.getId())
+						.date(schedule.getDate())
+						.startTime(schedule.getStartTime())
+						.endTime(schedule.getEndTime())
+						.build())
+					.toArray(ScheduleDetailResponseDto[]::new))
+				.build())
+			.collect(Collectors.toList()))
 			.accommodations(accommodations)
 			.supplies(suppliesByCategory)
 			.weatherInfos(weatherInfo)

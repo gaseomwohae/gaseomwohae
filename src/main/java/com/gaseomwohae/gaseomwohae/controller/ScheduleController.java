@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gaseomwohae.gaseomwohae.dto.schedule.CreateScheduleRequestDto;
+import com.gaseomwohae.gaseomwohae.dto.schedule.ScheduleListResponseDto;
 import com.gaseomwohae.gaseomwohae.dto.schedule.UpdateScheduleRequestDto;
 import com.gaseomwohae.gaseomwohae.model.Schedule;
 import com.gaseomwohae.gaseomwohae.service.ScheduleService;
@@ -28,7 +29,8 @@ public class ScheduleController {
 	private final ScheduleService scheduleService;
 
 	@GetMapping
-	public List<Schedule> getSchedules(@AuthenticationPrincipal Long userId, @RequestParam("travel-id") Long travelId) {
+	public List<ScheduleListResponseDto> getSchedules(@AuthenticationPrincipal Long userId,
+		@RequestParam("travel-id") Long travelId) {
 		return scheduleService.getSchedules(userId, travelId);
 	}
 

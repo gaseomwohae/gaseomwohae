@@ -2,12 +2,15 @@ package com.gaseomwohae.gaseomwohae.service;
 
 import java.time.LocalTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
 import com.gaseomwohae.gaseomwohae.common.exception.ErrorCode;
 import com.gaseomwohae.gaseomwohae.common.exception.exceptions.BadRequestException;
 import com.gaseomwohae.gaseomwohae.dto.schedule.CreateScheduleRequestDto;
+import com.gaseomwohae.gaseomwohae.dto.schedule.ScheduleDetailResponseDto;
+import com.gaseomwohae.gaseomwohae.dto.schedule.ScheduleListResponseDto;
 import com.gaseomwohae.gaseomwohae.dto.schedule.UpdateScheduleRequestDto;
 import com.gaseomwohae.gaseomwohae.model.Participant;
 import com.gaseomwohae.gaseomwohae.model.Place;
@@ -81,7 +84,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 	}
 
 	@Override
-	public List<Schedule> getSchedules(Long userId, Long travelId) {
+	public List<ScheduleListResponseDto> getSchedules(Long userId, Long travelId) {
 
 		// 여행 존재 체크
 		Travel travel = travelRepository.findById(travelId);
@@ -95,7 +98,23 @@ public class ScheduleServiceImpl implements ScheduleService {
 			throw new BadRequestException(ErrorCode.ACCESS_DENIED);
 		}
 
-		return scheduleRepository.findByTravelId(travelId);
+		List<Schedule> scheduleList = scheduleRepository.findByTravelId(travelId);
+
+		return scheduleList.stream()
+			.collect(Collectors.groupingBy(Schedule::getDate))
+			.entrySet().stream()
+			.map(entry -> ScheduleListResponseDto.builder()
+				.date(entry.getKey())
+				.schedule(entry.getValue().stream()
+					.map(schedule -> ScheduleDetailResponseDto.builder()
+						.scheduleId(schedule.getId())
+						.date(schedule.getDate())
+						.startTime(schedule.getStartTime())
+						.endTime(schedule.getEndTime())
+						.build())
+					.toArray(ScheduleDetailResponseDto[]::new))
+				.build())
+			.collect(Collectors.toList());
 	}
 
 	@Override
