@@ -1,10 +1,12 @@
 package com.gaseomwohae.gaseomwohae.service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -123,15 +125,15 @@ public class TravelServiceImpl implements TravelService {
 		List<TourismStatsDto> tourismStats = apiService.getTourismStats(destination.split(" ")[0], destination.split(" ")[1]);
 
 		// 응답 데이터 생성
-		return TravelDetailResponseDto.builder()
-			.travel(travel)
-			.participants(participants)
-			.schedules(scheduleList.stream()
-			.collect(Collectors.groupingBy(Schedule::getDate))
-			.entrySet().stream()
-			.map(entry -> ScheduleListResponseDto.builder()
-				.date(entry.getKey())
-				.schedule(entry.getValue().stream()
+		List<LocalDate> dateRange = Stream.iterate(travel.getStartDate(), date -> date.plusDays(1))
+			.limit(travel.getEndDate().toEpochDay() - travel.getStartDate().toEpochDay() + 1)
+			.collect(Collectors.toList());
+
+		List<ScheduleListResponseDto> scheduleListResponseDtos = dateRange.stream()
+			.map(date -> ScheduleListResponseDto.builder()
+				.date(date)
+				.schedule(scheduleList.stream()
+					.filter(schedule -> schedule.getDate().equals(date))
 					.map(schedule -> ScheduleDetailResponseDto.builder()
 						.scheduleId(schedule.getId())
 						.date(schedule.getDate())
@@ -141,7 +143,12 @@ public class TravelServiceImpl implements TravelService {
 						.build())
 					.toArray(ScheduleDetailResponseDto[]::new))
 				.build())
-			.collect(Collectors.toList()))
+			.collect(Collectors.toList());
+
+			return TravelDetailResponseDto.builder()
+			.travel(travel)
+			.participants(participants)
+			.schedules(scheduleListResponseDtos)
 			.accommodations(accommodations)
 			.supplies(suppliesByCategory)
 			.weatherInfos(weatherInfo)
