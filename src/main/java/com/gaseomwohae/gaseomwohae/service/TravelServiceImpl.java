@@ -137,6 +137,7 @@ public class TravelServiceImpl implements TravelService {
 						.date(schedule.getDate())
 						.startTime(schedule.getStartTime())
 						.endTime(schedule.getEndTime())
+						.place(placeRepository.findById(schedule.getPlaceId()))
 						.build())
 					.toArray(ScheduleDetailResponseDto[]::new))
 				.build())
