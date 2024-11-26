@@ -1,8 +1,11 @@
 package com.gaseomwohae.gaseomwohae.service;
 
+import java.util.List;
+
 import com.gaseomwohae.gaseomwohae.dto.place.CreatePlaceRequestDto;
+import com.gaseomwohae.gaseomwohae.dto.place.CreatePlaceResponseDto;
 
 public interface PlaceService {
-    void createPlace(CreatePlaceRequestDto createPlaceRequestDto);
+    List<CreatePlaceResponseDto> createPlace(List<CreatePlaceRequestDto> createPlaceRequestDto);
 }
 
