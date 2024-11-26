@@ -125,8 +125,8 @@ INSERT INTO `user` (name, email, password, profile_image) VALUES
 
 
 INSERT INTO `travel` (name, destination, start_date, end_date, budget) VALUES
-('부산여행', '부산광역시', '2024-10-11', '2024-10-15', 200000),
-('서울여행', '서울특별시', '2023-12-20', '2024-12-21', 300000);
+('부산여행', '부산광역시 중구', '2024-10-11', '2024-10-15', 200000),
+('서울여행', '서울특별시 종로구', '2023-12-20', '2024-12-21', 300000);
 
 INSERT INTO `participant` (user_id, travel_id) VALUES
 (1, 1),

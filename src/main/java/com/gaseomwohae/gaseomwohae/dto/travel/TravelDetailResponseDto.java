@@ -22,4 +22,5 @@ public class TravelDetailResponseDto {
 	private List<ScheduleDetailResponseDto> schedules;
 	private List<Place> accommodations;
 	private Map<String, List<Supply>> supplies;
+	private List<WeatherResponseDto> weatherInfos;
 }

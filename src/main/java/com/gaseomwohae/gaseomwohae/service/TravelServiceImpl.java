@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.gaseomwohae.gaseomwohae.common.exception.ErrorCode;
 import com.gaseomwohae.gaseomwohae.common.exception.exceptions.BadRequestException;
+import com.gaseomwohae.gaseomwohae.dto.region.LocationDto;
 import com.gaseomwohae.gaseomwohae.dto.schedule.ScheduleDetailResponseDto;
 import com.gaseomwohae.gaseomwohae.dto.travel.AddSupplyRequestDto;
 import com.gaseomwohae.gaseomwohae.dto.travel.CreateTravelRequestDto;
@@ -19,6 +20,7 @@ import com.gaseomwohae.gaseomwohae.dto.travel.InviteListResponseDto;
 import com.gaseomwohae.gaseomwohae.dto.travel.InviteParticipantRequestDto;
 import com.gaseomwohae.gaseomwohae.dto.travel.TravelDetailResponseDto;
 import com.gaseomwohae.gaseomwohae.dto.travel.UpdateTravelRequestDto;
+import com.gaseomwohae.gaseomwohae.dto.travel.WeatherResponseDto;
 import com.gaseomwohae.gaseomwohae.dto.user.GetUserInfoResponseDto;
 import com.gaseomwohae.gaseomwohae.model.Invite;
 import com.gaseomwohae.gaseomwohae.model.Participant;
@@ -31,11 +33,13 @@ import com.gaseomwohae.gaseomwohae.model.User;
 import com.gaseomwohae.gaseomwohae.repository.InviteRepository;
 import com.gaseomwohae.gaseomwohae.repository.ParticipantRepository;
 import com.gaseomwohae.gaseomwohae.repository.PlaceRepository;
+import com.gaseomwohae.gaseomwohae.repository.RegionRepository;
 import com.gaseomwohae.gaseomwohae.repository.ScheduleRepository;
 import com.gaseomwohae.gaseomwohae.repository.SupplyRepository;
 import com.gaseomwohae.gaseomwohae.repository.TravelRepository;
 import com.gaseomwohae.gaseomwohae.repository.TravelSupplyRepository;
 import com.gaseomwohae.gaseomwohae.repository.UserRepository;
+import com.gaseomwohae.gaseomwohae.util.ApiService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -50,7 +54,10 @@ public class TravelServiceImpl implements TravelService {
 	private final PlaceRepository placeRepository;
 	private final SupplyRepository supplyRepository;
 	private final TravelSupplyRepository travelSupplyRepository;
-
+	private final ApiService apiService;
+	private final RegionService regionService;
+	private final RegionRepository regionRepository;
+	
 	@Override
 	public TravelDetailResponseDto getTravel(Long userId, Long travelId) {
 		Travel travel = travelRepository.findById(travelId);
@@ -104,6 +111,14 @@ public class TravelServiceImpl implements TravelService {
 				.add(supply);
 		});
 
+		// 목적지의 날씨정보
+		String destination = travel.getDestination();
+		destination = "부산광역시 중구";
+		LocationDto location = regionRepository.getLocation(destination.split(" ")[0], destination.split(" ")[1]);
+
+		List<WeatherResponseDto> weatherInfo = apiService.getWeatherInfo(location.getY().doubleValue(), location.getX().doubleValue());
+
+
 		return TravelDetailResponseDto.builder()
 			.travel(travel)
 			.participants(participants)
@@ -116,6 +131,7 @@ public class TravelServiceImpl implements TravelService {
 				.build()).collect(Collectors.toList()))
 			.accommodations(accommodations)
 			.supplies(suppliesByCategory)
+			.weatherInfos(weatherInfo)
 			.build();
 	}
 
