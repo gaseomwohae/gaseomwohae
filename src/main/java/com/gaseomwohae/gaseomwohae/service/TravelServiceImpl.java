@@ -19,6 +19,7 @@ import com.gaseomwohae.gaseomwohae.dto.travel.CreateTravelRequestDto;
 import com.gaseomwohae.gaseomwohae.dto.travel.DeleteSupplyRequestDto;
 import com.gaseomwohae.gaseomwohae.dto.travel.InviteListResponseDto;
 import com.gaseomwohae.gaseomwohae.dto.travel.InviteParticipantRequestDto;
+import com.gaseomwohae.gaseomwohae.dto.travel.TourismStatsDto;
 import com.gaseomwohae.gaseomwohae.dto.travel.TravelDetailResponseDto;
 import com.gaseomwohae.gaseomwohae.dto.travel.UpdateTravelRequestDto;
 import com.gaseomwohae.gaseomwohae.dto.travel.WeatherResponseDto;
@@ -115,9 +116,11 @@ public class TravelServiceImpl implements TravelService {
 		// 목적지의 날씨정보
 		String destination = travel.getDestination();
 		LocationDto location = regionRepository.getLocation(destination.split(" ")[0], destination.split(" ")[1]);
-
 		List<WeatherResponseDto> weatherInfo = apiService.getWeatherInfo(location.getY().doubleValue(), location.getX().doubleValue());
 
+
+		// 목적지의 관광 통계 정보
+		List<TourismStatsDto> tourismStats = apiService.getTourismStats(destination.split(" ")[0], destination.split(" ")[1]);
 
 		// 응답 데이터 생성
 		return TravelDetailResponseDto.builder()
@@ -141,6 +144,7 @@ public class TravelServiceImpl implements TravelService {
 			.accommodations(accommodations)
 			.supplies(suppliesByCategory)
 			.weatherInfos(weatherInfo)
+			.tourismStats(tourismStats)
 			.build();
 	}
 

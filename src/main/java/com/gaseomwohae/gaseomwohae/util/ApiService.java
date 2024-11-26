@@ -16,6 +16,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.gaseomwohae.gaseomwohae.dto.travel.TourismStatsDto;
 import com.gaseomwohae.gaseomwohae.dto.travel.WeatherResponseDto;
 
 @Service
@@ -66,6 +68,32 @@ public class ApiService {
         return processWeatherData(response);
     }
 
+    public List<TourismStatsDto> getTourismStats(String city, String district) {
+        String url = "http://openapi.tour.go.kr/openapi/service/TourismResourceStatsService/getPchrgTrrsrtVisitorList";
+        LocalDate currentDate = LocalDate.now();
+        List<TourismStatsDto> tourismStatsList = new ArrayList<>();
+
+        for (int i = 0; i < 6; i++) {
+            String yearMonth = currentDate.minusMonths(i).format(DateTimeFormatter.ofPattern("yyyyMM"));
+            
+            String response = WebClient.create(url)
+                    .get()
+                    .uri(uriBuilder -> uriBuilder
+                            .queryParam("serviceKey", "7RWj0xvK9L9UiCrhvDYxqjmfXYXmu%2FDk2BqIIKjHfgu1qo88v0e%2FOoI7FCjDP3i57S35lqU75vcGDvm72O5wWA%3D%3D")
+                            .queryParam("YM", yearMonth)
+                            .queryParam("SIDO", city)
+                            .queryParam("GUNGU", district)
+                            .build())
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .block();
+
+            tourismStatsList.addAll(processTourismDataFromXml(response));
+        }
+
+        return tourismStatsList;
+    }
+
     private String getCurrentBaseTime(List<String> baseTimes) {
         LocalTime now = LocalTime.now();
         LocalTime lastBaseTime = LocalTime.parse(baseTimes.get(0), DateTimeFormatter.ofPattern("HHmm"));
@@ -79,9 +107,7 @@ public class ApiService {
         }
         return lastBaseTime.format(DateTimeFormatter.ofPattern("HHmm")); // Return the last base time if none match
     }
-
     
-
     // LCC DFS 좌표변환 메서드
     // 위도(latitude)는 x, 경도(longitude)는 y로 매핑됨
     private LatXLngY convertGRID_GPS(int mode, double lat_X, double lng_Y) {
@@ -220,5 +246,38 @@ public class ApiService {
         LocalDate date = LocalDate.parse(fcstDate, DateTimeFormatter.ofPattern("yyyyMMdd"));
         LocalDate today = LocalDate.now();
         return !date.isBefore(today) && !date.isAfter(today.plusDays(2));
+    }
+
+
+    
+    private List<TourismStatsDto> processTourismDataFromXml(String response) {
+        List<TourismStatsDto> tourismDataList = new ArrayList<>();
+        XmlMapper xmlMapper = new XmlMapper();
+
+        try {
+            JsonNode rootNode = xmlMapper.readTree(response.getBytes());
+            JsonNode itemsNode = rootNode.path("response").path("body").path("items").path("item");
+
+            for (JsonNode itemNode : itemsNode) {
+                String date = itemNode.path("ym").asText();
+                int visitorCount = 0;
+                if(itemNode.path("csForCnt").asText() != null){
+                    visitorCount = itemNode.path("csForCnt").asInt();
+                }
+                if(itemNode.path("csNatCnt").asText() != null){
+                    visitorCount = itemNode.path("csNatCnt").asInt();
+                }
+
+
+                tourismDataList.add(TourismStatsDto.builder()
+                        .date(LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM")))
+                        .visitorCount(visitorCount)
+                        .build());
+            }
+        } catch (Exception e) {
+            return null;
+        }
+
+        return tourismDataList;
     }
 }
